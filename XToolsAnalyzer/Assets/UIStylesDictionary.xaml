@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:XToolsAnalyzer.Assets">
+    <Style x:Key="Header" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UltraDarkBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style x:Key="AnalysisTypeBtn" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource UltraDarkBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Name="border"
+                            Padding="10"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource UltraDarkBrush}"
+                            CornerRadius="3"
+                            Background="{StaticResource LightBrush}">
+                        <Grid >
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="Center" 
+                                              Name="content" 
+                                              Margin="5 0 0 0"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource UltraLightBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" >
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
+                                        <GradientStop Color="{StaticResource LightColor}" Offset="0.35"/>
+                                        <GradientStop Color="{StaticResource MediumColor}" Offset="0.95"/>
+                                        <GradientStop Color="{StaticResource DarkColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Opacity" Value="0.7" />
+                            <Setter Property="Foreground" Value="{StaticResource MediumBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
