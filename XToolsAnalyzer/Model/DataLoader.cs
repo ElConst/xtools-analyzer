@@ -7,82 +7,90 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace XToolsAnalyzer
+namespace XToolsAnalyzer.Model
 {
-    public class XToolsStatistics
-    {
-        public string UserName;
-
-        public string ProductVersion,
-            DateSentUtc, StartDateUtc, EndDateUtc;
-
-        public List<XToolUsageData> ToolsUsed = new List<XToolUsageData>();
-
-        public XToolsStatistics(string userName) => UserName = userName;
-    }
-
-    public class XToolUsageData
-    {
-        public string ToolName;
-
-        public int ClicksCount;
-
-        public float OpenTimeAvg;
-
-        public XToolUsageData(string toolName) => ToolName = toolName;
-    }
-
     public static class DataLoader
     {
         /// <summary>
-        /// Takes path to the folder where JSONs are located and collects the tools usage statistics for each user
+        /// Collects statistics for each user from JSONs inside a folder
         /// </summary>
-        public static List<XToolsStatistics> Load(string jsonRootPath)
+        /// <param name="jsonsRootPath">Path to a folder with JSONs</param>
+        /// <returns>Statistics collected from JSONs</returns>
+        public static List<StatisticsReport> LoadFromFolder(string jsonsRootPath)
         {
-            List<XToolsStatistics> allUsersStatistics = new List<XToolsStatistics>(); // List to return
+            List<string> jsons = new List<string>();
 
-            // Get list of folders each containing statistics about XTools usage by a user
-            var userStatisticsPaths = Directory.EnumerateDirectories(jsonRootPath, "*", SearchOption.TopDirectoryOnly);
-            foreach (string userPath in userStatisticsPaths)
+            // Get list of .json files inside the folder and nested ones
+            var userJsonFiles = Directory.EnumerateFiles(jsonsRootPath, "*.json", SearchOption.AllDirectories);
+            // Read the content of each json into a string
+            var jsonsСontent = userJsonFiles.Select(path => File.ReadAllText(path));
+
+            return GetInfoFromJsons(jsonsСontent.ToList());
+        }
+
+        /// <summary>
+        /// Collects statistics for each user from JSONs given
+        /// </summary>
+        private static List<StatisticsReport> GetInfoFromJsons(List<string> jsons)
+        {
+            List<StatisticsReport> reports = new List<StatisticsReport>(); // List to return
+
+            foreach (string json in jsons)
             {
-                string userName = Path.GetFileName(userPath);
+                if (string.IsNullOrEmpty(json)) { continue; }
 
-                // Get list of .json files inside the folder
-                var userJsons = Directory.EnumerateFiles(userPath, "*.json");
-                foreach (string json in userJsons)
+                StatisticsReport stats = new StatisticsReport(); // Will contain info from one JSON file
+
+                JObject rootJObj = JObject.Parse(json); // The whole JSON in a JObject
+
+                string productVersion = rootJObj.GetValue("ProductVersion")?.ToString();
+                if (productVersion == null) { productVersion = rootJObj.GetValue("Version")?.ToString(); }
+
+                stats.ProductVersion = productVersion;
+
+                // Get list of tools from the value of the "Items" property
+                IEnumerable<JProperty> toolsUsed = rootJObj.GetValue("Items").ToObject<JObject>().Properties();
+                // Collect statistics from each tool
+                foreach (var toolJProp in toolsUsed)
                 {
-                    XToolsStatistics stats = new XToolsStatistics(userName); // Will contain info from one JSON file
+                    // Will contain statistics for one XTool usage within a period
+                    ToolUsageData toolData = new ToolUsageData(toolJProp.Name);
 
-                    
-                    JObject rootJObj = JObject.Parse(File.ReadAllText(json)); // The whole JSON in a JObject
+                    JObject toolJObj = toolJProp.Value.ToObject<JObject>();
 
-                    stats.ProductVersion = rootJObj.GetValue("ProductVersion").ToString();
+                    JObject commandJObj = toolJObj.GetValue("Command")?.ToObject<JObject>();
+                    JObject executorJObj = toolJObj.GetValue("Executor")?.ToObject<JObject>();
+                    JObject uiJObj = toolJObj.GetValue("UI")?.ToObject<JObject>();
 
-                    // Get list of tools from the value of "Items" property
-                    IEnumerable<JProperty> toolsUsed = rootJObj.GetValue("Items").ToObject<JObject>().Properties();
-                    // Collect statistics from each tool
-                    foreach (var toolJProp in toolsUsed)
+                    if (commandJObj != null)
                     {
-                        // Will contain statistics for one XTool used
-                        XToolUsageData toolData = new XToolUsageData(toolJProp.Name);
-
-                        JObject toolJObj = toolJProp.Value.ToObject<JObject>();
-                        JObject commandJObj = toolJObj.GetValue("Command").ToObject<JObject>();
-
-                        toolData.ClicksCount = Convert.ToInt32(commandJObj.GetValue("Click"));
-
-                        JObject uiJObj = toolJObj.GetValue("UI").ToObject<JObject>();
-
-                        toolData.OpenTimeAvg = (float)Convert.ToDouble(uiJObj.GetValue("OpenTime.Avg"));
-
-                        stats.ToolsUsed.Add(toolData);
+                        foreach (KeyValuePair<string, JToken> property in commandJObj)
+                        {
+                            toolData.CommandStats.Add(property.Key, property.Value.ToString());
+                        }
+                    }
+                    if (executorJObj != null)
+                    {
+                        foreach (KeyValuePair<string, JToken> property in executorJObj)
+                        {
+                            toolData.ExecutorStats.Add(property.Key, property.Value.ToString());
+                        }
+                    }
+                    if (uiJObj != null)
+                    {
+                        foreach (KeyValuePair<string, JToken> property in uiJObj)
+                        {
+                            toolData.UIStats.Add(property.Key, property.Value.ToString());
+                        }
                     }
 
-                    allUsersStatistics.Add(stats);
+                    stats.ToolsUsed.Add(toolData);
                 }
+
+                reports.Add(stats);
             }
 
-            return allUsersStatistics;
+            return reports;
         }
     }
 }

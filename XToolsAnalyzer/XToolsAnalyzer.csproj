@@ -58,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IAnalysis.cs" />
+    <Compile Include="Model\DataHandler.cs" />
+    <Compile Include="Model\StatisticsReport.cs" />
+    <Compile Include="Model\ToolUsageData.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Page Include="Assets\ColorDictionary.xaml">
       <SubType>Designer</SubType>

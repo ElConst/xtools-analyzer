@@ -8,26 +8,41 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Background="{StaticResource UltraLightBrush}">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <TextBlock Style="{StaticResource Header}" Grid.Row="0" Grid.Column="0" 
-                   VerticalAlignment="Center" Margin="4">
+        <TextBlock Style="{StaticResource Header}" VerticalAlignment="Center" Margin="4">
             Тип анализа
         </TextBlock>
-        
         <WrapPanel Grid.Column="0" Grid.Row="1" Background="{StaticResource DarkBrush}">
             <Button Style="{StaticResource AnalysisTypeBtn}" Width="200">
-                Тип анализа 1
+                Кол-во запусков
             </Button>
         </WrapPanel>
+
+        <TextBlock Style="{StaticResource Header}" Grid.Column="1" VerticalAlignment="Center" Margin="4">
+            Фильтр
+        </TextBlock>
+        <WrapPanel Grid.Column="1" Grid.Row="1" Background="{StaticResource MediumBrush}"></WrapPanel>
+
+        <TextBlock Style="{StaticResource Header}" Grid.Column="2" VerticalAlignment="Center" Margin="4">
+            Результаты анализа
+        </TextBlock>
+        <ListBox Name="AnalysesListBox" Grid.Row="1" Grid.Column="2" Background="{StaticResource LightBrush}" ItemsSource="{Binding toolsStatistics}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>

@@ -12,10 +12,8 @@ namespace XToolsAnalyzer
     {
         public MainWindow()
         {
-            var viewModel = new MainVM();
-            DataContext = viewModel;
-
             InitializeComponent();
+            DataContext = new MainVM();
         }
     }
 }
