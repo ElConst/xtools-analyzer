@@ -37,8 +37,6 @@ namespace XToolsAnalyzer.Model
                 {
                     if (!tool.CommandStats.ContainsKey("Click")) { continue; }
 
-                    // TODO: Translate tool names to russian
-
                     int clicksFromReport = int.Parse(tool.CommandStats["Click"]);
 
                     if (toolsClicks.ContainsKey(tool.ToolName))

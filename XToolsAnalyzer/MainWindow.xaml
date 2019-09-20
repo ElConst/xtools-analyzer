@@ -13,7 +13,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -37,10 +37,15 @@
         <TextBlock Style="{StaticResource Header}" Grid.Column="2" VerticalAlignment="Center" Margin="4">
             Результаты анализа
         </TextBlock>
-        <ListBox Name="AnalysesListBox" Grid.Row="1" Grid.Column="2" Background="{StaticResource LightBrush}" ItemsSource="{Binding toolsStatistics}">
+        <ListBox Name="ResultsListBox" Grid.Row="1" Grid.Column="2" Background="{StaticResource LightBrush}" ItemsSource="{Binding toolsStatistics}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock/>
+                    <Border Style="{StaticResource AnalysisElementBorder}">
+                        <DockPanel Width="255" LastChildFill="False">
+                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}" DockPanel.Dock="Left" Width="200"/>
+                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Statistic}" DockPanel.Dock="Right"/>
+                        </DockPanel>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

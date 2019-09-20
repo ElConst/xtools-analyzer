@@ -6,6 +6,20 @@
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
+    <Style x:Key="NormalText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UltraDarkBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+    </Style>
+
+    <Style x:Key="AnalysisElementBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource LightBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UltraDarkBrush}"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
     <Style x:Key="AnalysisTypeBtn" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource UltraDarkBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>

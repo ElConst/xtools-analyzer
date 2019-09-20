@@ -14,11 +14,12 @@ namespace XToolsAnalyzer.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public ObservableCollection<ToolStatisticVM> toolsStatistics = new ObservableCollection<ToolStatisticVM>();
+        public ObservableCollection<ToolStatisticVM> toolsStatistics { get; set; } = new ObservableCollection<ToolStatisticVM>();
 
         public MainVM()
         {
-            DataHandler.CollectDataFromFolder(@"D:\XTools");
+            // Path to the folder with JSONs is needed to be specified here
+            DataHandler.CollectDataFromFolder(@"D:\a");
 
             var toolsStatsIEnum = ClicksAnalysis.Instance.GetAnalysisResult().Select(toolStatPair => new ToolStatisticVM(toolStatPair.Key, toolStatPair.Value));
             toolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum);
