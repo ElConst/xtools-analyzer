@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace XToolsAnalyzer.Model
 {
+    /// <summary>Handles data load and its primary processing.</summary>
     public static class DataLoader
     {
+        /// <summary>By default if data is being loaded locally from the computer it will be loaded from this folder.</summary>
+        public static string DefaultFolderToLoad { get; set; }
+
+        /// <summary>Collects statistics for each user from JSONs inside the default folder</summary>
+        /// <returns>Statistics collected from JSONs</returns>
+        public static List<StatisticsReport> LoadFromFolder() => LoadFromFolder(DefaultFolderToLoad);
+
         /// <summary>
         /// Collects statistics for each user from JSONs inside a folder
         /// </summary>
@@ -28,9 +32,7 @@ namespace XToolsAnalyzer.Model
             return GetInfoFromJsons(jsonsСontent.ToList());
         }
 
-        /// <summary>
-        /// Collects statistics for each user from JSONs given
-        /// </summary>
+        /// <summary>Collects statistics for each user from JSONs given.</summary>
         private static List<StatisticsReport> GetInfoFromJsons(List<string> jsons)
         {
             List<StatisticsReport> reports = new List<StatisticsReport>(); // List to return

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace XToolsAnalyzer.Model
 {
+    /// <summary>Class containing info about usage of a tool.</summary>
     public class ToolUsageData
     {
         public string ToolName;
