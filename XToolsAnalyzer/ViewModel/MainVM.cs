@@ -9,14 +9,6 @@ namespace XToolsAnalyzer.ViewModel
     {
         /// <summary>Collection of analyses which can be applied for the data.</summary>
         public ObservableCollection<AnalysisVM> Analyses { get; set; } = new ObservableCollection<AnalysisVM>();
-        
-        private ObservableCollection<ToolStatisticVM> toolsStatistics = new ObservableCollection<ToolStatisticVM>();
-        /// <summary>Collection of 'ToolStatisticVM' instances containing information about certain statistic of certain tool.</summary>
-        public ObservableCollection<ToolStatisticVM> ToolsStatistics
-        {
-            get => toolsStatistics;
-            set { SetProperty(ref toolsStatistics, value); } // Raises PropertyChanged event to update view.
-        }
 
         public static MainVM Instance;
         public MainVM()
@@ -30,20 +22,7 @@ namespace XToolsAnalyzer.ViewModel
         }
     }
 
-    /// <summary>Represents tool statistic to be shown in the view.</summary>
-    public class ToolStatisticVM
-    {
-        public string Name { get; }
-        public float Statistic { get; }
-
-        public ToolStatisticVM(string name, float statistic)
-        {
-            Name = name;
-            Statistic = statistic;
-        }
-    }
-
-    /// <summary>All about an analysis needed in the view including command to make this analysis.</summary>
+    /// <summary>All the information needed in the view about an analysis including command to make this analysis.</summary>
     public class AnalysisVM
     {
         private IAnalysis analysis; // An analysis interface containing its name and the function to make the analysis.
@@ -63,7 +42,7 @@ namespace XToolsAnalyzer.ViewModel
                     // Make a ToolStatisticVM IEnumerable from the results of the analysis.
                     var toolsStatsIEnum = analysis.GetAnalysisResult().Select(toolStatPair => new ToolStatisticVM(toolStatPair.Key, toolStatPair.Value));
                     // Replace old info in the VM with analysis results in the IEnumerable sorted by descending.
-                    MainVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
+                    ResultsViewVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
 
                     // TODO: Separate the sorting process.
                 }));

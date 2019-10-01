@@ -43,20 +43,6 @@
         <TextBlock Style="{StaticResource Header}" Grid.Column="2" VerticalAlignment="Center" Margin="4">
             Результаты анализа
         </TextBlock>
-        <ListBox Name="ResultsListBox" Grid.Row="1" Grid.Column="2" Background="{StaticResource LightBrush}" ItemsSource="{Binding ToolsStatistics}">
-            <!--<ListBox.DataContext>
-                <vm:AnalysisResultsVM/>
-            </ListBox.DataContext>-->
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border Style="{StaticResource AnalysisElementBorder}">
-                        <DockPanel Width="255" LastChildFill="False">
-                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}" DockPanel.Dock="Left" Width="200"/>
-                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Statistic}" DockPanel.Dock="Right"/>
-                        </DockPanel>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <local:ResultsView Grid.Row="1" Grid.Column="2"/>        
     </Grid>
 </Window>
