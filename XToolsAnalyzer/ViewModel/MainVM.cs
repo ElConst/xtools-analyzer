@@ -44,7 +44,7 @@ namespace XToolsAnalyzer.ViewModel
                     // Replace old info in the VM with analysis results in the IEnumerable sorted by descending.
                     //ResultsViewVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
 
-                    ResultsViewVM.Instance.CreateChart(analysis.GetAnalysisResult(), Name);
+                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name);
 
                     // TODO: Separate the sorting process.
                 }));
