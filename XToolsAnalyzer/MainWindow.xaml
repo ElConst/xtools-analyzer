@@ -15,9 +15,9 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="165"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -30,7 +30,7 @@
         <ListBox Name="AnalysesListBox" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding Analyses}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource AnalysisTypeBtn}" Width="185" Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
+                    <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -43,6 +43,6 @@
         <TextBlock Style="{StaticResource Header}" Grid.Column="2" VerticalAlignment="Center" Margin="4">
             Результаты анализа
         </TextBlock>
-        <local:ResultsView Grid.Row="1" Grid.Column="2"/>        
+        <local:ResultsView Grid.Row="1" Grid.Column="2"/>
     </Grid>
 </Window>

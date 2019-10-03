@@ -40,9 +40,11 @@ namespace XToolsAnalyzer.ViewModel
                 (resultsCommand = new RelayCommand(obj =>
                 {
                     // Make a ToolStatisticVM IEnumerable from the results of the analysis.
-                    var toolsStatsIEnum = analysis.GetAnalysisResult().Select(toolStatPair => new ToolStatisticVM(toolStatPair.Key, toolStatPair.Value));
+                    //var toolsStatsIEnum = analysis.GetAnalysisResult().Select(toolStatPair => new ToolStatisticVM(toolStatPair.Key, toolStatPair.Value));
                     // Replace old info in the VM with analysis results in the IEnumerable sorted by descending.
-                    ResultsViewVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
+                    //ResultsViewVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
+
+                    ResultsViewVM.Instance.CreateChart(analysis.GetAnalysisResult(), Name);
 
                     // TODO: Separate the sorting process.
                 }));

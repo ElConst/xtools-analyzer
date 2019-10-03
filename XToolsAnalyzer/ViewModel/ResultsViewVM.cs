@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace XToolsAnalyzer.ViewModel
 {
@@ -7,30 +10,33 @@ namespace XToolsAnalyzer.ViewModel
     {
         public static ResultsViewVM Instance;
 
-        private ObservableCollection<ToolStatisticVM> toolsStatistics = new ObservableCollection<ToolStatisticVM>();
-        /// <summary>Collection of 'ToolStatisticVM' instances containing information about certain statistic of certain tool.</summary>
-        public ObservableCollection<ToolStatisticVM> ToolsStatistics
+        private ObservableCollection<string> labels = new ObservableCollection<string>();
+        public ObservableCollection<string> Labels
         {
-            get => toolsStatistics;
-            set { SetProperty(ref toolsStatistics, value); } // Raises PropertyChanged event to update view.
+            get => labels;
+            set => SetProperty(ref labels, value); // Raises PropertyChanged event to update view.
+        }
+
+        public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
+
+        public void CreateChart(Dictionary<string, float> toolsData, string analysisName)
+        {
+            if (SeriesCollection != null) { SeriesCollection.Clear(); }
+
+            var stats = toolsData.Select(toolData => toolData.Value);
+            SeriesCollection.Add(new RowSeries
+            {
+                Title = analysisName,
+                Values = new ChartValues<float>(stats),
+            });
+
+            var toolsNames = toolsData.Select(toolData => toolData.Key);
+            Labels = new ObservableCollection<string>(toolsNames);
         }
 
         public ResultsViewVM()
         {
             Instance = this;
-        }
-    }
-
-    /// <summary>Represents tool statistic to be shown in the view.</summary>
-    public class ToolStatisticVM
-    {
-        public string Name { get; }
-        public float Statistic { get; }
-
-        public ToolStatisticVM(string name, float statistic)
-        {
-            Name = name;
-            Statistic = statistic;
         }
     }
 }

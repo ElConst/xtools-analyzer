@@ -4,23 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:XToolsAnalyzer"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <vm:ResultsViewVM/>
     </UserControl.DataContext>
-    
-    <ListBox Name="ResultsListBox" Background="{StaticResource LightBrush}" ItemsSource="{Binding ToolsStatistics}">
-        <ListBox.ItemTemplate>
-            <DataTemplate>
-                <Border Style="{StaticResource AnalysisElementBorder}">
-                    <DockPanel Width="255" LastChildFill="False">
-                        <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}" DockPanel.Dock="Left" Width="200"/>
-                        <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Statistic}" DockPanel.Dock="Right"/>
-                    </DockPanel>
-                </Border>
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+
+    <lvc:CartesianChart Series="{Binding SeriesCollection}" 
+                        DisableAnimations="True" LegendLocation="Top">
+        <lvc:CartesianChart.AxisX>
+            <lvc:Axis/>
+        </lvc:CartesianChart.AxisX>
+        <lvc:CartesianChart.AxisY>
+            <lvc:Axis Title="XTools" Labels="{Binding Labels}">
+                <lvc:Axis.Separator>
+                    <lvc:Separator Step="1"/>
+                </lvc:Axis.Separator>
+            </lvc:Axis>
+        </lvc:CartesianChart.AxisY>
+    </lvc:CartesianChart>
 </UserControl>
