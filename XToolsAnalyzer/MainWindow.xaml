@@ -16,11 +16,11 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="165"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition MinWidth="400"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
@@ -30,19 +30,26 @@
         <ListBox Name="AnalysesListBox" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding Analyses}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
+                    <Button Style="{StaticResource AnalysisTypeBtn}" Width="150"
+                            Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <TextBlock Style="{StaticResource Header}" Grid.Column="1" VerticalAlignment="Center" Margin="4">
-            Фильтр
-        </TextBlock>
+        <TextBlock Style="{StaticResource Header}" Text="Фильтр"
+                   Grid.Column="1" VerticalAlignment="Center" Margin="4"/>
         <WrapPanel Grid.Column="1" Grid.Row="1" Background="{StaticResource MediumBrush}"></WrapPanel>
 
-        <TextBlock Style="{StaticResource Header}" Grid.Column="2" VerticalAlignment="Center" Margin="4">
-            Результаты анализа
-        </TextBlock>
-        <local:ResultsView Grid.Row="1" Grid.Column="2"/>
+        <DockPanel Grid.Column="2" LastChildFill="False">
+            <TextBlock Style="{StaticResource Header}" Text="Результаты анализа"
+                       VerticalAlignment="Center" Margin="4"/>
+
+            <ComboBox ItemsSource="{Binding SortTypes}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0 0 10 0"
+                      SelectedItem="{Binding SelectedSort, Mode=TwoWay}"/>
+
+            <TextBlock Style="{StaticResource NormalText}" Text="Сортировка"
+                       VerticalAlignment="Center" DockPanel.Dock="Right" Margin="4"/>
+        </DockPanel>
+        <local:ResultsView Grid.Row="1" Grid.Column="2" Margin="0 0 10 0"/>
     </Grid>
 </Window>

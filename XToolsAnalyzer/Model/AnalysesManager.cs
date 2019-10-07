@@ -18,6 +18,9 @@ namespace XToolsAnalyzer.Model
     {
         // TODO: Get analyses from assemblies.
 
+        // Last analysis that was made
+        public static IAnalysis SelectedAnalysis;
+
         // Possible analyses list.
         public static List<IAnalysis> Analyses = new List<IAnalysis>() { ClicksAnalysis.Instance };
     }

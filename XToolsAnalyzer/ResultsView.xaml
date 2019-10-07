@@ -16,7 +16,7 @@
         <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}" 
                             Zoom="X" DisableAnimations="True">
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Position="RightTop" RangeChanged="XAxisOnRangeChanged"/>
+                <lvc:Axis Position="RightTop" RangeChangedCommand="{Binding XAxisRangeChangedCommand}"/>
             </lvc:CartesianChart.AxisX>
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis Title="XTools" Labels="{Binding Labels}">

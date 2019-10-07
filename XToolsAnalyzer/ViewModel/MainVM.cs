@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using XToolsAnalyzer.Model;
 
@@ -19,13 +20,39 @@ namespace XToolsAnalyzer.ViewModel
             DataLoader.DefaultFolderToLoad = @"D:\XTools";
 
             Analyses = new ObservableCollection<AnalysisVM>(AnalysesManager.Analyses.Select(analysis => new AnalysisVM(analysis)));
+
+            SelectedSort = SortTypes.First();
+        }
+
+        /// <summary>Chart sortings selectable from view.</summary>
+        public IReadOnlyList<string> SortTypes { get; } = new List<string>()
+        {
+            "По алфавиту", "По возрастанию", "По убыванию"
+        };
+
+        private string selectedSort;
+        /// <summary>Sorting type which is selected at the moment.</summary>
+        public string SelectedSort
+        {
+            get => selectedSort;
+            set
+            {
+                SetProperty(ref selectedSort, value); // Raises the PropertyChanged event to sync with the view.
+
+                if (AnalysesManager.SelectedAnalysis == null) { return; }
+
+                var analysisSelected = AnalysesManager.SelectedAnalysis;
+                // Recreate the results chart to match selected sorting.
+                ResultsViewVM.Instance.CreateRowChart(analysisSelected.GetAnalysisResult(), analysisSelected.Name, SelectedSort);
+            }
         }
     }
 
     /// <summary>All the information needed in the view about an analysis including command to make this analysis.</summary>
     public class AnalysisVM
     {
-        private IAnalysis analysis; // An analysis interface containing its name and the function to make the analysis.
+        /// <summary>An analysis interface containing its name and the function to make the analysis.</summary>
+        private readonly IAnalysis analysis; 
 
         /// <summary>Analysis name.</summary>
         public string Name => analysis.Name;
@@ -39,14 +66,9 @@ namespace XToolsAnalyzer.ViewModel
                 return resultsCommand ?? // Make sure that the command's backing field was initialized and return it. 
                 (resultsCommand = new RelayCommand(obj =>
                 {
-                    // Make a ToolStatisticVM IEnumerable from the results of the analysis.
-                    //var toolsStatsIEnum = analysis.GetAnalysisResult().Select(toolStatPair => new ToolStatisticVM(toolStatPair.Key, toolStatPair.Value));
-                    // Replace old info in the VM with analysis results in the IEnumerable sorted by descending.
-                    //ResultsViewVM.Instance.ToolsStatistics = new ObservableCollection<ToolStatisticVM>(toolsStatsIEnum.OrderByDescending(tool => tool.Statistic));
+                    AnalysesManager.SelectedAnalysis = analysis; // Remember this analysis
 
-                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name);
-
-                    // TODO: Separate the sorting process.
+                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name, MainVM.Instance.SelectedSort);
                 }));
             }
         }
