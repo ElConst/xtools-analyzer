@@ -1,9 +1,8 @@
 ﻿<UserControl x:Class="XToolsAnalyzer.ResultsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:XToolsAnalyzer"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
              mc:Ignorable="d" 
@@ -12,19 +11,29 @@
         <vm:ResultsViewVM/>
     </UserControl.DataContext>
 
-    <ScrollViewer>
-        <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}" 
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <TextBlock Style="{StaticResource NormalText}" Text="Сортировка"
+                       HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="4"/>
+            <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding SortTypes}"
+                      SelectedItem="{Binding SelectedSort, Mode=TwoWay}" Margin="5 0 0 0"/>
+        </StackPanel>
+        
+        
+        <ScrollViewer>
+            <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}"  Margin="0 10 10 0"
                             Zoom="X" DisableAnimations="True">
-            <lvc:CartesianChart.AxisX>
-                <lvc:Axis Position="RightTop" RangeChangedCommand="{Binding XAxisRangeChangedCommand}"/>
-            </lvc:CartesianChart.AxisX>
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="XTools" Labels="{Binding Labels}">
-                    <lvc:Axis.Separator>
-                        <lvc:Separator Step="1"/>
-                    </lvc:Axis.Separator>
-                </lvc:Axis>
-            </lvc:CartesianChart.AxisY>
-        </lvc:CartesianChart>
-    </ScrollViewer>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Margin="0 10" Position="RightTop" RangeChangedCommand="{Binding XAxisRangeChangedCommand}"/>
+                </lvc:CartesianChart.AxisX>
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="XTools" Labels="{Binding Labels}">
+                        <lvc:Axis.Separator>
+                            <lvc:Separator Step="1"/>
+                        </lvc:Axis.Separator>
+                    </lvc:Axis>
+                </lvc:CartesianChart.AxisY>
+            </lvc:CartesianChart>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

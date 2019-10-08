@@ -20,31 +20,6 @@ namespace XToolsAnalyzer.ViewModel
             DataLoader.DefaultFolderToLoad = @"D:\XTools";
 
             Analyses = new ObservableCollection<AnalysisVM>(AnalysesManager.Analyses.Select(analysis => new AnalysisVM(analysis)));
-
-            SelectedSort = SortTypes.First();
-        }
-
-        /// <summary>Chart sortings selectable from view.</summary>
-        public IReadOnlyList<string> SortTypes { get; } = new List<string>()
-        {
-            "По алфавиту", "По возрастанию", "По убыванию"
-        };
-
-        private string selectedSort;
-        /// <summary>Sorting type which is selected at the moment.</summary>
-        public string SelectedSort
-        {
-            get => selectedSort;
-            set
-            {
-                SetProperty(ref selectedSort, value); // Raises the PropertyChanged event to sync with the view.
-
-                if (AnalysesManager.SelectedAnalysis == null) { return; }
-
-                var analysisSelected = AnalysesManager.SelectedAnalysis;
-                // Recreate the results chart to match selected sorting.
-                ResultsViewVM.Instance.CreateRowChart(analysisSelected.GetAnalysisResult(), analysisSelected.Name, SelectedSort);
-            }
         }
     }
 
@@ -68,7 +43,7 @@ namespace XToolsAnalyzer.ViewModel
                 {
                     AnalysesManager.SelectedAnalysis = analysis; // Remember this analysis
 
-                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name, MainVM.Instance.SelectedSort);
+                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name);
                 }));
             }
         }

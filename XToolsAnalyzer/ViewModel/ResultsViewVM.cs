@@ -4,6 +4,7 @@ using LiveCharts.Wpf;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
@@ -46,28 +47,51 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
+        /// <summary>Chart sortings selectable from view.</summary>
+        public IReadOnlyList<string> SortTypes { get; } = new List<string>()
+        {
+            "По алфавиту", "По возрастанию", "По убыванию"
+        };
+
+        private string selectedSort;
+        /// <summary>Sorting type which is selected at the moment.</summary>
+        public string SelectedSort
+        {
+            get => selectedSort;
+            set
+            {
+                SetProperty(ref selectedSort, value); // Raises the PropertyChanged event to sync with the view.
+
+                if (AnalysesManager.SelectedAnalysis == null) { return; }
+
+                var analysisSelected = AnalysesManager.SelectedAnalysis;
+                // Recreate the results chart to match selected sorting.
+                CreateRowChart(analysisSelected.GetAnalysisResult(), analysisSelected.Name);
+            }
+        }
+
         /// <summary>
         /// Replaces chart series with a new row series. Sets needed corresponding values for the chart.
         /// </summary>
         /// <param name="toolsData">Data (tool name + statistic) which will be displayed in the chart</param>
         /// <param name="statisticName">Analysed statistic name.</param>
-        /// <param name="sorting">Sorting type (one of SortTypes from MainVM)</param>
-        public void CreateRowChart(Dictionary<string, float> toolsData, string statisticName, string sorting)
+        public void CreateRowChart(Dictionary<string, float> toolsData, string statisticName)
         {
             if (SeriesCollection != null) { SeriesCollection.Clear(); }
 
             List<KeyValuePair<string, float>> toolsDataList = toolsData.ToList();
 
             // Sort data
-            if (sorting == MainVM.Instance.SortTypes[0]) // Alphabetically
+            if (SelectedSort == SortTypes[0]) // Alphabetically
             {
                 toolsDataList = toolsData.OrderByDescending(toolKeyValue => toolKeyValue.Key).ToList();
+                // OrderByDescending is used because of reversed list inside the chart.
             }
-            else if (sorting == MainVM.Instance.SortTypes[1]) // By values ascending
+            else if (SelectedSort == SortTypes[1]) // By values ascending
             {
                 toolsDataList = toolsData.OrderByDescending(toolKeyValue => toolKeyValue.Value).ToList();
             }
-            else if (sorting == MainVM.Instance.SortTypes[2]) // By values descending
+            else if (SelectedSort == SortTypes[2]) // By values descending
             {
                 toolsDataList = toolsData.OrderBy(toolKeyValue => toolKeyValue.Value).ToList();
             }
@@ -88,6 +112,8 @@ namespace XToolsAnalyzer.ViewModel
         public ResultsViewVM()
         {
             Instance = this;
+
+            SelectedSort = SortTypes.First();
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:XToolsAnalyzer"
         xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="450" Width="900"
         Background="{StaticResource UltraLightBrush}">
 
     <Window.DataContext>
@@ -17,39 +17,34 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="165"/>
             <ColumnDefinition Width="230"/>
-            <ColumnDefinition MinWidth="400"/>
+            <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
-        <TextBlock Style="{StaticResource Header}" VerticalAlignment="Center" Margin="4">
-            Тип анализа
-        </TextBlock>
-        <ListBox Name="AnalysesListBox" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding Analyses}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Button Style="{StaticResource AnalysisTypeBtn}" Width="150"
+
+        <DockPanel>
+            <TextBlock Style="{StaticResource Header}" Text="Тип анализа"
+                   DockPanel.Dock="Top" Margin="4"/>
+            
+            <ListBox Name="AnalysesListBox" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding Analyses}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource AnalysisTypeBtn}" Width="150"
                             Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
-        <TextBlock Style="{StaticResource Header}" Text="Фильтр"
-                   Grid.Column="1" VerticalAlignment="Center" Margin="4"/>
-        <WrapPanel Grid.Column="1" Grid.Row="1" Background="{StaticResource MediumBrush}"></WrapPanel>
-
-        <DockPanel Grid.Column="2" LastChildFill="False">
-            <TextBlock Style="{StaticResource Header}" Text="Результаты анализа"
-                       VerticalAlignment="Center" Margin="4"/>
-
-            <ComboBox ItemsSource="{Binding SortTypes}" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="0 0 10 0"
-                      SelectedItem="{Binding SelectedSort, Mode=TwoWay}"/>
-
-            <TextBlock Style="{StaticResource NormalText}" Text="Сортировка"
-                       VerticalAlignment="Center" DockPanel.Dock="Right" Margin="4"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DockPanel>
-        <local:ResultsView Grid.Row="1" Grid.Column="2" Margin="0 0 10 0"/>
+
+        <DockPanel Grid.Column="1">
+            <TextBlock Style="{StaticResource Header}" Text="Фильтр"
+                   VerticalAlignment="Center" Margin="4" DockPanel.Dock="Top"/>
+            
+            <WrapPanel Background="{StaticResource MediumBrush}"></WrapPanel>
+        </DockPanel>
+
+        <DockPanel Grid.Column="2">
+            <TextBlock Style="{StaticResource Header}" Text="Результаты анализа"
+                       DockPanel.Dock="Top" Margin="4"/>
+            <local:ResultsView/>
+        </DockPanel>
     </Grid>
 </Window>
