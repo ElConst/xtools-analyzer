@@ -8,6 +8,7 @@ using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
+    /// <summary>Viewmodel containing logic for the 'ResultsView'.</summary>
     public class ResultsViewVM : ViewModelBase
     {
         public static ResultsViewVM Instance;
@@ -29,9 +30,6 @@ namespace XToolsAnalyzer.ViewModel
             set => SetProperty(ref chartHeight, value); // Raises PropertyChanged event to update view.
         }
 
-        /// <summary>Series of the chart (pie, rows, columns etc.).</summary>
-        public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
-
         private RelayCommand xAxisRangeChangedCommand;
         /// <summary>Command calling a function which forces the x axis scale to start at 0 regardless of zoom.</summary>
         public RelayCommand XAxisRangeChangedCommand
@@ -47,63 +45,119 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        /// <summary>Chart sortings selectable from view.</summary>
-        public IReadOnlyList<string> SortTypes { get; } = new List<string>()
-        {
-            "По алфавиту", "По возрастанию", "По убыванию"
-        };
+        // Type for a sorting function.
+        public delegate IOrderedEnumerable<KeyValuePair<string, Dictionary<string, int>>> AnalysisSortFunc(AnalysisResult data);
 
-        private string selectedSort;
-        /// <summary>Sorting type which is selected at the moment.</summary>
-        public string SelectedSort
+        public class SortingVM : ViewModelBase
         {
-            get => selectedSort;
-            set
+            /// <summary>Russian name of the sorting.</summary>
+            public string Name { get; set; }
+            /// <summary>Instructions for the sorting.</summary>
+            public AnalysisSortFunc SortingFunction { get; set; }
+
+            public SortingVM(string name, AnalysisSortFunc sortingFunction)
             {
-                SetProperty(ref selectedSort, value); // Raises the PropertyChanged event to sync with the view.
-
-                if (AnalysesManager.SelectedAnalysis == null) { return; }
-
-                var analysisSelected = AnalysesManager.SelectedAnalysis;
-                // Recreate the results chart to match selected sorting.
-                CreateRowChart(analysisSelected.GetAnalysisResult(), analysisSelected.Name);
+                Name = name;
+                SortingFunction = sortingFunction;
             }
         }
 
-        /// <summary>
-        /// Replaces chart series with a new row series. Sets needed corresponding values for the chart.
-        /// </summary>
-        /// <param name="toolsData">Data (tool name + statistic) which will be displayed in the chart</param>
-        /// <param name="statisticName">Analysed statistic name.</param>
-        public void CreateRowChart(Dictionary<string, float> toolsData, string statisticName)
+        /// <summary>Existing sortings.</summary>
+        public List<SortingVM> Sortings { get; } = new List<SortingVM>
         {
+            // Alphabetically
+            new SortingVM("По алфавиту", // OrderByDescending is used because of upside down list inside the chart.
+                (AnalysisResult analysisResult) => analysisResult.ToolsStatistics.OrderByDescending(toolKeyValue => toolKeyValue.Key)),
+            
+            // Values ascending
+            new SortingVM("По возрастанию",
+                (AnalysisResult analysisResult) => analysisResult.ToolsStatistics.OrderByDescending(toolKeyValue => toolKeyValue.Value.Sum(statKeyValue => statKeyValue.Value))),
+
+            // Values descending
+            new SortingVM("По убыванию",
+                (AnalysisResult analysisResult) => analysisResult.ToolsStatistics.OrderBy(toolKeyValue => toolKeyValue.Value.Sum(statKeyValue => statKeyValue.Value)))
+        };
+
+        private SortingVM selectedSorting;
+        /// <summary>Sorting selected from the view.</summary>
+        public SortingVM SelectedSorting
+        {
+            get => selectedSorting;
+            set
+            {
+                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with view.
+                SortAnalysisResult = SelectedSorting.SortingFunction;
+
+                if (AnalysisVM.SelectedAnalysis == null) { return; }
+
+                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
+            }
+        }
+
+        /// <summary>Sorting function of the selected sorting.</summary>
+        private static AnalysisSortFunc SortAnalysisResult { get; set; }
+
+        /// <summary>Series of the chart (pie, rows, columns etc.).</summary>
+        public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
+
+        /// <summary>Replaces chart series with new row series. Sets needed values for the series.</summary>
+        /// <param name="toolsData">A data class object where the information will be taken from</param>
+        /// <param name="statisticName">Analysed statistic name.</param>
+        public void CreateRowChart(AnalysisResult analysisResult)
+        {
+            // Clear old information.
             if (SeriesCollection != null) { SeriesCollection.Clear(); }
 
-            List<KeyValuePair<string, float>> toolsDataList = toolsData.ToList();
+            // Get and sort new information.
+            var resultStats = SortAnalysisResult(analysisResult);
 
-            // Sort data
-            if (SelectedSort == SortTypes[0]) // Alphabetically
+            if (resultStats.Count() == 1) // Create a normal single row series if there's only 1 statistic to show. 
             {
-                toolsDataList = toolsData.OrderByDescending(toolKeyValue => toolKeyValue.Key).ToList();
-                // OrderByDescending is used because of reversed list inside the chart.
+                var stats = resultStats.Select(toolKeyValue => toolKeyValue.Value.First().Value);
+                SeriesCollection.Add(new RowSeries
+                {
+                    Title = AnalysisVM.SelectedAnalysis.Name,
+                    Values = new ChartValues<int>(stats)
+                });
             }
-            else if (SelectedSort == SortTypes[1]) // By values ascending
+            else // Create row series with information stacked in each row.
             {
-                toolsDataList = toolsData.OrderByDescending(toolKeyValue => toolKeyValue.Value).ToList();
-            }
-            else if (SelectedSort == SortTypes[2]) // By values descending
-            {
-                toolsDataList = toolsData.OrderBy(toolKeyValue => toolKeyValue.Value).ToList();
+                List<string> statsNames = new List<string>(); 
+
+                // Find out which values were analysed(number of series equals number of these values).
+                foreach (var toolKeyValue in resultStats)
+                {
+                    var toolStats = toolKeyValue.Value;
+
+                    foreach (var statKeyValue in toolStats)
+                    {
+                        if (statsNames.Contains(statKeyValue.Key)) { continue; }
+
+                        statsNames.Add(statKeyValue.Key);
+                    }
+                }
+
+                // Collect info about each statistic for each tool
+                foreach (var statName in statsNames)
+                {
+                    List<int> statValues = new List<int>(); // Values for the chart series
+
+                    foreach (var toolKeyValue in resultStats)
+                    {
+                        var toolStats = toolKeyValue.Value;
+
+                        statValues.Add(toolStats.ContainsKey(statName) ? toolStats[statName] : 0);
+                    }
+
+                    SeriesCollection.Add(new StackedRowSeries
+                    {
+                        Title = statName,
+                        Values = new ChartValues<int>(statValues)
+                    });
+                }
             }
 
-            var stats = toolsDataList.Select(toolData => toolData.Value);
-            SeriesCollection.Add(new RowSeries
-            {
-                Title = statisticName,
-                Values = new ChartValues<float>(stats),
-            });
-
-            var toolsNames = toolsDataList.Select(toolData => toolData.Key);
+            var toolsNames = resultStats.Select(toolKeyValue => toolKeyValue.Key);
             Labels = new ObservableCollection<string>(toolsNames);
 
             ChartHeight = 20 * Labels.Count;
@@ -113,7 +167,7 @@ namespace XToolsAnalyzer.ViewModel
         {
             Instance = this;
 
-            SelectedSort = SortTypes.First();
+            SelectedSorting = Sortings.First();
         }
     }
 }

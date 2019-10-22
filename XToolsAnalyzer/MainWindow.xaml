@@ -28,7 +28,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Button Style="{StaticResource AnalysisTypeBtn}" Width="150"
-                            Content="{Binding Path=Name}" Command="{Binding Path=ResultsCommand}"/>
+                            Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

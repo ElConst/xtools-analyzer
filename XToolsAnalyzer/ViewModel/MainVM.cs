@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using XToolsAnalyzer.Model;
 
@@ -8,7 +7,6 @@ namespace XToolsAnalyzer.ViewModel
     /// <summary>Viewmodel containing logic for the 'MainWindow' view.</summary>
     public class MainVM : ViewModelBase
     {
-        /// <summary>Collection of analyses which can be applied for the data.</summary>
         public ObservableCollection<AnalysisVM> Analyses { get; set; } = new ObservableCollection<AnalysisVM>();
 
         public static MainVM Instance;
@@ -17,37 +15,43 @@ namespace XToolsAnalyzer.ViewModel
             Instance = this;
 
             // Path to the folder with JSONs required here.
-            DataLoader.DefaultFolderToLoad = @"D:\XTools";
+            DataLoader.DefaultFolderToLoad = @"d:\xtools";
 
-            Analyses = new ObservableCollection<AnalysisVM>(AnalysesManager.Analyses.Select(analysis => new AnalysisVM(analysis)));
+            // Find existing analyses.
+            Analysis.Instances = ReflectiveEnumerator.GetEnumerableOfType<Analysis>().ToList();
+            // Create objects which the View can interact with.
+            Analyses = new ObservableCollection<AnalysisVM>(Analysis.Instances.Select(analysis => new AnalysisVM(analysis)));
         }
     }
 
-    /// <summary>All the information needed in the view about an analysis including command to make this analysis.</summary>
+    /// <summary>Class representing an analysis for the view so it can work with it.</summary>
     public class AnalysisVM
     {
-        /// <summary>An analysis interface containing its name and the function to make the analysis.</summary>
-        private readonly IAnalysis analysis; 
+        /// <summary>Actually the last analysis that was made.</summary>
+        public static AnalysisVM SelectedAnalysis;
+
+        /// <summary>Model of the analysis.</summary>
+        private readonly Analysis analysis; 
 
         /// <summary>Analysis name.</summary>
         public string Name => analysis.Name;
 
-        private RelayCommand resultsCommand;
+        private RelayCommand analysisCommand;
         /// <summary>Command calling a function which replaces current info on the screen with results of the analysis.</summary>
-        public RelayCommand ResultsCommand
+        public RelayCommand AnalysisCommand
         {
             get
             {
-                return resultsCommand ?? // Make sure that the command's backing field was initialized and return it. 
-                (resultsCommand = new RelayCommand(obj =>
+                return analysisCommand ?? // Make sure that the command's backing field was initialized and return it. 
+                (analysisCommand = new RelayCommand(obj =>
                 {
-                    AnalysesManager.SelectedAnalysis = analysis; // Remember this analysis
+                    SelectedAnalysis = this; // Remember this analysis
 
-                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult(), Name);
+                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult());
                 }));
             }
         }
 
-        public AnalysisVM(IAnalysis analysis) => this.analysis = analysis;
+        public AnalysisVM(Analysis analysis) => this.analysis = analysis;
     }
 }

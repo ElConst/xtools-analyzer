@@ -64,8 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\AnalysesManager.cs" />
+    <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\ClicksAnalysis.cs" />
+    <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
     <Compile Include="Model\ToolUsageData.cs" />
     <Compile Include="ResultsView.xaml.cs">
