@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\ClicksAnalysis.cs" />
+    <Compile Include="Model\OpenTimeAvgAnalysis.cs" />
     <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
     <Compile Include="Model\ToolUsageData.cs" />

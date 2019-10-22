@@ -20,5 +20,10 @@ namespace XToolsAnalyzer.Model
     {
         /// <summary>Collection of tools statistics (Dictionary (Tool name -> Its statistics))</summary>
         public Dictionary<string, Dictionary<string, int>> ToolsStatistics = new Dictionary<string, Dictionary<string, int>>();
+
+        /// <summary>Contains more than one value for each tool.</summary>
+        public bool MultipleStatistics { get; }
+
+        public AnalysisResult(bool multipleStatistics = false) => MultipleStatistics = multipleStatistics;
     }
 }

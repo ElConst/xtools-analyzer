@@ -111,12 +111,12 @@ namespace XToolsAnalyzer.ViewModel
             // Get and sort new information.
             var resultStats = SortAnalysisResult(analysisResult);
 
-            if (resultStats.Count() == 1) // Create a normal single row series if there's only 1 statistic to show. 
+            if (!analysisResult.MultipleStatistics) // Create a normal single row series if there's only 1 statistic to show. 
             {
                 var stats = resultStats.Select(toolKeyValue => toolKeyValue.Value.First().Value);
                 SeriesCollection.Add(new RowSeries
                 {
-                    Title = AnalysisVM.SelectedAnalysis.Name,
+                    Title = resultStats.First().Value.First().Key, // Get the statistic name from one the data.
                     Values = new ChartValues<int>(stats)
                 });
             }
