@@ -44,8 +44,8 @@ namespace XToolsAnalyzer.Model
                 toolKeyValue.Value.OpenTimeAvg /= toolKeyValue.Value.Reports; // Finally calculate the average number.
 
                 // Add it to the result.
-                result.ToolsStatistics.Add(toolKeyValue.Key, new Dictionary<string, int>());
-                result.ToolsStatistics[toolKeyValue.Key]["Среднее время работы(мс)"] = (int)toolKeyValue.Value.OpenTimeAvg;
+                result.Statistics.Add(toolKeyValue.Key, new Dictionary<string, int>());
+                result.Statistics[toolKeyValue.Key]["Среднее время работы(мс)"] = (int)toolKeyValue.Value.OpenTimeAvg;
             }
 
             return result;

@@ -7,7 +7,8 @@ namespace XToolsAnalyzer.ViewModel
     /// <summary>Viewmodel containing logic for the 'MainWindow' view.</summary>
     public class MainVM : ViewModelBase
     {
-        public ObservableCollection<AnalysisVM> Analyses { get; set; } = new ObservableCollection<AnalysisVM>();
+        public ObservableCollection<AnalysisVM> ToolsStatsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
+        public ObservableCollection<AnalysisVM> XToolsSettingsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
 
         public static MainVM Instance;
         public MainVM()
@@ -19,8 +20,16 @@ namespace XToolsAnalyzer.ViewModel
 
             // Find existing analyses.
             Analysis.Instances = ReflectiveEnumerator.GetEnumerableOfType<Analysis>().ToList();
+
             // Create objects which the View can interact with.
-            Analyses = new ObservableCollection<AnalysisVM>(Analysis.Instances.Select(analysis => new AnalysisVM(analysis)));
+
+            ToolsStatsAnalyses = new ObservableCollection<AnalysisVM>(Analysis.Instances
+                .Where(analysis => analysis.Type == Analysis.AnalysisType.ToolsStats)
+                .Select(analysis => new AnalysisVM(analysis)));
+
+            XToolsSettingsAnalyses = new ObservableCollection<AnalysisVM>(Analysis.Instances
+                .Where(analysis => analysis.Type == Analysis.AnalysisType.XToolsSettings)
+                .Select(analysis => new AnalysisVM(analysis)));
         }
     }
 

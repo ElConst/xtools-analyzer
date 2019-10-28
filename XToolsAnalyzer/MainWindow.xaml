@@ -15,23 +15,39 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="165"/>
-            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="185"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel>
-            <TextBlock Style="{StaticResource Header}" Text="Тип анализа"
+            <TextBlock Style="{StaticResource Header}" Text="Типы анализа"
                    DockPanel.Dock="Top" Margin="4"/>
-            
-            <ListBox Name="AnalysesListBox" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding Analyses}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Button Style="{StaticResource AnalysisTypeBtn}" Width="150"
-                            Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <ScrollViewer>
+                <StackPanel Background="{StaticResource DarkBrush}">
+                    <TextBlock Text="По всем инструментам" Foreground="{StaticResource UltraLightBrush}"
+                               FontWeight="DemiBold" Margin="4"/>
+                    <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Margin="0 2 0 2"
+                                    Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="Опции XTools" Foreground="{StaticResource UltraLightBrush}"
+                                   FontWeight="DemiBold" Margin="4"/>
+                    <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Margin="0 2 0 2"
+                                    Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
         </DockPanel>
 
         <DockPanel Grid.Column="1">

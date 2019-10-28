@@ -23,13 +23,13 @@ namespace XToolsAnalyzer.Model
                     int clicksFromReport = int.Parse(tool.CommandStats["Click"]);
 
                     // Add tool to the dictionary if it wasn't done before
-                    if (!result.ToolsStatistics.ContainsKey(tool.ToolName))
+                    if (!result.Statistics.ContainsKey(tool.ToolName))
                     {
-                        result.ToolsStatistics.Add(tool.ToolName, new Dictionary<string, int>()); // Add tool
-                        result.ToolsStatistics[tool.ToolName].Add(Name, 0); // Add container for the statistic
+                        result.Statistics.Add(tool.ToolName, new Dictionary<string, int>()); // Add tool
+                        result.Statistics[tool.ToolName].Add(Name, 0); // Add container for the statistic
                     }
 
-                    result.ToolsStatistics[tool.ToolName][Name] += clicksFromReport;
+                    result.Statistics[tool.ToolName][Name] += clicksFromReport;
                 }
             }
 

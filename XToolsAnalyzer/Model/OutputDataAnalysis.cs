@@ -11,7 +11,7 @@ namespace XToolsAnalyzer.Model
         /// <summary>Gets amount of objects of different data types in the output of each tool</summary>
         public override AnalysisResult GetAnalysisResult()
         {
-            AnalysisResult result = new AnalysisResult(true); // Value to return
+            AnalysisResult result = new AnalysisResult(); // Value to return
 
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
@@ -25,20 +25,20 @@ namespace XToolsAnalyzer.Model
                         if (!dataTypeMatch.Success) { continue; } // Skip if it's not about output data types.
                         string dataType = dataTypeMatch.Value; // Else get the type name.
 
-                        if (!result.ToolsStatistics.ContainsKey(tool.ToolName))
+                        if (!result.Statistics.ContainsKey(tool.ToolName))
                         {
                             // If there was no information about this tool before, add a container for the info
-                            result.ToolsStatistics.Add(tool.ToolName, new Dictionary<string, int>());
+                            result.Statistics.Add(tool.ToolName, new Dictionary<string, int>());
                         }
-                        if (!result.ToolsStatistics[tool.ToolName].ContainsKey(dataType))
+                        if (!result.Statistics[tool.ToolName].ContainsKey(dataType))
                         {
                             // Also add a container for the info about the type
-                            result.ToolsStatistics[tool.ToolName].Add(dataType, int.Parse(stat.Value));
+                            result.Statistics[tool.ToolName].Add(dataType, int.Parse(stat.Value));
                         }
                         else
                         {
                             // If there already is a container, just sum old and new values.
-                            result.ToolsStatistics[tool.ToolName][dataType] += int.Parse(stat.Value);
+                            result.Statistics[tool.ToolName][dataType] += int.Parse(stat.Value);
                         }
                     }
                 }
