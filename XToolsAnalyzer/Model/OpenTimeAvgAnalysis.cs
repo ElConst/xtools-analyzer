@@ -6,7 +6,11 @@ namespace XToolsAnalyzer.Model
     /// <summary>Analyses how much time on average each tool needs for one launch.</summary>
     public class OpenTimeAvgAnalysis : Analysis
     {
-        public OpenTimeAvgAnalysis() => Name = "Время работы";
+        public OpenTimeAvgAnalysis()
+        {
+            Name = "Время работы";
+            Type = AnalysisType.ToolsStats;
+        }
 
         private class Tool
         {

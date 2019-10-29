@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\ClicksAnalysis.cs" />
+    <Compile Include="Model\ColorSchemeAnalysis.cs" />
     <Compile Include="Model\InputDataAnalysis.cs" />
     <Compile Include="Model\OpenTimeAvgAnalysis.cs" />
     <Compile Include="Model\OutputDataAnalysis.cs" />

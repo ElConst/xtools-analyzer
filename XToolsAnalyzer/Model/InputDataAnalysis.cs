@@ -6,7 +6,11 @@ namespace XToolsAnalyzer.Model
     /// <summary>Analyses amount and types of tools input data.</summary>
     public class InputDataAnalysis : Analysis
     {
-        public InputDataAnalysis() => Name = "Входные данные";
+        public InputDataAnalysis()
+        {
+            Name = "Входные данные";
+            Type = AnalysisType.ToolsStats;
+        }
 
         /// <summary>Gets amount of uses of objects of different data types by each tool</summary>
         public override AnalysisResult GetAnalysisResult()

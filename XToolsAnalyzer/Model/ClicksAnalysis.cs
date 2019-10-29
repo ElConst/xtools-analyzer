@@ -5,7 +5,11 @@ namespace XToolsAnalyzer.Model
     /// <summary>Analyses the amount of tools calls.</summary>
     public class ClicksAnalysis : Analysis
     {
-        public ClicksAnalysis() => Name = "Кол-во запусков";
+        public ClicksAnalysis()
+        {
+            Name = "Кол-во запусков";
+            Type = AnalysisType.ToolsStats;
+        }
 
         /// <summary>Collects info about how many times each tool was called by users within the period.</summary>
         public override AnalysisResult GetAnalysisResult()
