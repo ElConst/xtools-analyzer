@@ -1,7 +1,6 @@
 ﻿using LiveCharts;
 using LiveCharts.Events;
 using LiveCharts.Wpf;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace XToolsAnalyzer.ViewModel
         public ObservableCollection<string> Labels
         {
             get => labels;
-            set => SetProperty(ref labels, value); // Raises PropertyChanged event to update view.
+            set => SetProperty(ref labels, value); // Raises PropertyChanged event to sync with the view.
         }
 
         private int chartHeight = 1000;
@@ -28,11 +27,11 @@ namespace XToolsAnalyzer.ViewModel
         public int ChartHeight
         {
             get => chartHeight;
-            set => SetProperty(ref chartHeight, value); // Raises PropertyChanged event to update view.
+            set => SetProperty(ref chartHeight, value); // Raises PropertyChanged event to sync with the view.
         }
 
         private RelayCommand xAxisRangeChangedCommand;
-        /// <summary>Command calling a function which forces the x axis scale to start at 0 regardless of zoom.</summary>
+        /// <summary>Forces the x axis to start at 0 if the user zooms horizontally.</summary>
         public RelayCommand XAxisRangeChangedCommand
         {
             get
@@ -46,13 +45,15 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        // Type for a sorting function.
+        // Delegate type for a sorting function.
         public delegate IOrderedEnumerable<KeyValuePair<string, Dictionary<string, int>>> AnalysisSortFunc(AnalysisResult data);
 
-        public class SortingVM : ViewModelBase
+        /// <summary>Represents a sorting for analyses results.</summary>
+        public class SortingVM
         {
             /// <summary>Russian name of the sorting.</summary>
             public string Name { get; set; }
+
             /// <summary>Instructions for the sorting.</summary>
             public AnalysisSortFunc SortingFunction { get; set; }
 
@@ -63,7 +64,7 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        /// <summary>Existing sortings.</summary>
+        /// <summary>Available sortings.</summary>
         public List<SortingVM> Sortings { get; } = new List<SortingVM>
         {
             // Alphabetically
@@ -80,13 +81,13 @@ namespace XToolsAnalyzer.ViewModel
         };
 
         private SortingVM selectedSorting;
-        /// <summary>Sorting selected from the view.</summary>
+        /// <summary>The sorting selected from the view.</summary>
         public SortingVM SelectedSorting
         {
             get => selectedSorting;
             set
             {
-                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with view.
+                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with the view.
                 SortAnalysisResult = SelectedSorting.SortingFunction;
 
                 if (AnalysisVM.SelectedAnalysis == null) { return; }
@@ -95,10 +96,10 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        /// <summary>Sorting function of the selected sorting.</summary>
+        /// <summary>The sorting function of the selected sorting.</summary>
         private static AnalysisSortFunc SortAnalysisResult { get; set; }
 
-        /// <summary>Series of the chart (pie, rows, columns etc.).</summary>
+        /// <summary>Series of the chart.</summary>
         public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
 
         /// <summary>Contains data needed for creating a chart.</summary>
@@ -117,17 +118,19 @@ namespace XToolsAnalyzer.ViewModel
 
             public ChartData(AnalysisResult analysisResult)
             {
+                // Sort the raw info at first.
                 var resultStats = SortAnalysisResult(analysisResult);
 
-                Labels = resultStats.Select(toolKeyValue => toolKeyValue.Key).ToArray();
+                // Get names of objects which were analysed.
+                Labels = resultStats.Select(objKeyValue => objKeyValue.Key).ToArray();
 
                 List<string> seriesNames = new List<string>();
 
                 // Find out which statistics were analysed (their names will be used for series names).
                 foreach (var objKeyValue in resultStats)
                 {
-                    var toolStats = objKeyValue.Value;
-                    foreach (var statKeyValue in toolStats)
+                    var objStats = objKeyValue.Value;
+                    foreach (var statKeyValue in objStats)
                     {
                         if (seriesNames.Contains(statKeyValue.Key)) { continue; }
 
@@ -135,7 +138,7 @@ namespace XToolsAnalyzer.ViewModel
                     }
                 }
 
-                // Collect info about each statistic for each object
+                // Collect info about each statistic for each object.
                 foreach (var name in seriesNames)
                 {
                     int[] values = new int[Labels.Length];
@@ -154,12 +157,11 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        /// <summary>Replaces chart series with new row series. Sets needed values for the series.</summary>
-        /// <param name="toolsData">A data class object where the information will be taken from</param>
-        /// <param name="statisticName">Analysed statistic name.</param>
+        /// <summary>Replaces chart series with new row series.</summary>
+        /// <param name="analysisResult">A data class object where the information will be taken from</param>
         public void CreateRowChart(AnalysisResult analysisResult)
         {
-            // Clear old information.
+            // Clear the old information.
             if (SeriesCollection != null) { SeriesCollection.Clear(); }
 
             ChartData data = new ChartData(analysisResult);

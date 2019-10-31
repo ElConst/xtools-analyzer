@@ -76,6 +76,7 @@
     <Compile Include="ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AnalysisVM.cs" />
     <Compile Include="ViewModel\ResultsViewVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\MainVM.cs" />

@@ -9,9 +9,7 @@ namespace XToolsAnalyzer.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        /// Raises PropertyChanged event.
-        /// </summary>
+        /// <summary>Raises the PropertyChanged event.</summary>
         /// <param name="propertyName">Name of the property being changed (can be set automatically)</param>
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
