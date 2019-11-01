@@ -14,12 +14,21 @@ namespace XToolsAnalyzer.Model
         {
             Name = "Цветовая схема";
             Type = AnalysisType.XToolsSettings;
+            SelectedGrouping = Groupings[0];
         }
+
+        private static string ThemeGrouping = "По схемам";
+
+        private string[] groupings =
+        {
+            ThemeGrouping
+        };
+        public override string[] Groupings => groupings;
 
         /// <summary>Gets the number of times each color scheme was used.</summary>
         public override AnalysisResult GetAnalysisResult()
         {
-            AnalysisResult result = new AnalysisResult(); // Value to return
+            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
@@ -33,22 +42,27 @@ namespace XToolsAnalyzer.Model
                         if (!colorSchemeMatch.Success) { continue; } // Skip if it's not about color schemes.
                         string color = colorSchemeMatch.Value; // Else get the color name.
 
-                        if (!result.Statistics.ContainsKey(color))
+                        if (!stats.ContainsKey(color))
                         {
                             // If there was no information about this scheme before, add a container for the info
-                            result.Statistics.Add(color, new Dictionary<string, int>());
+                            stats.Add(color, new Dictionary<string, int>());
                         }
-                        if (!result.Statistics[color].ContainsKey("Кол-во использований"))
+                        if (!stats[color].ContainsKey("Кол-во использований"))
                         {
                             // Also add a container for the info about the scheme usage
-                            result.Statistics[color].Add("Кол-во использований", 0);
+                            stats[color].Add("Кол-во использований", 0);
                         }
 
                         // Add the new value to the old info.
-                        result.Statistics[color]["Кол-во использований"] += int.Parse(stat.Value);
+                        stats[color]["Кол-во использований"] += int.Parse(stat.Value);
                     }
                 }
             }
+
+            AnalysisResult result = new AnalysisResult();
+            result.Statistics = stats.ToArray();
+
+            SelectedSorting.SortingFunction(ref result);
 
             return result;
         }

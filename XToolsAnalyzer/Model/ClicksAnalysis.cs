@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace XToolsAnalyzer.Model
 {
@@ -9,12 +10,21 @@ namespace XToolsAnalyzer.Model
         {
             Name = "Кол-во запусков";
             Type = AnalysisType.ToolsStats;
+            SelectedGrouping = Groupings[0];
         }
+
+        private static string ToolGrouping = "По инструментам";
+
+        private string[] groupings =
+        {
+            ToolGrouping
+        };
+        public override string[] Groupings => groupings;
 
         /// <summary>Collects info about how many times each tool was called by users within the period.</summary>
         public override AnalysisResult GetAnalysisResult()
         {
-            AnalysisResult result = new AnalysisResult(); // Value to return
+            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
@@ -27,15 +37,20 @@ namespace XToolsAnalyzer.Model
                     int clicksFromReport = int.Parse(tool.CommandStats["Click"]);
 
                     // Add tool to the dictionary if it wasn't done before
-                    if (!result.Statistics.ContainsKey(tool.ToolName))
+                    if (!stats.ContainsKey(tool.ToolName))
                     {
-                        result.Statistics.Add(tool.ToolName, new Dictionary<string, int>()); // Add tool
-                        result.Statistics[tool.ToolName].Add(Name, 0); // Add container for the statistic
+                        stats.Add(tool.ToolName, new Dictionary<string, int>()); // Add tool
+                        stats[tool.ToolName].Add(Name, 0); // Add container for the statistic
                     }
 
-                    result.Statistics[tool.ToolName][Name] += clicksFromReport;
+                    stats[tool.ToolName][Name] += clicksFromReport;
                 }
             }
+
+            AnalysisResult result = new AnalysisResult();
+            result.Statistics = stats.ToArray();
+
+            SelectedSorting.SortingFunction(ref result);
 
             return result;
         }

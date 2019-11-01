@@ -10,7 +10,14 @@ namespace XToolsAnalyzer.Model
         {
             Name = "Время работы";
             Type = AnalysisType.ToolsStats;
+            SelectedGrouping = Groupings[0];
         }
+
+        private static string
+            ToolGrouping = "По инструментам";
+
+        private string[] groupings = { ToolGrouping };
+        public override string[] Groupings => groupings;
 
         private class Tool
         {
@@ -41,16 +48,20 @@ namespace XToolsAnalyzer.Model
                 }
             }
 
-            AnalysisResult result = new AnalysisResult();
+            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (var toolKeyValue in toolsInfo)
             {
                 toolKeyValue.Value.OpenTimeAvg /= toolKeyValue.Value.Reports; // Finally calculate the average number.
 
-                // Add it to the result.
-                result.Statistics.Add(toolKeyValue.Key, new Dictionary<string, int>());
-                result.Statistics[toolKeyValue.Key]["Среднее время работы(мс)"] = (int)toolKeyValue.Value.OpenTimeAvg;
+                stats.Add(toolKeyValue.Key, new Dictionary<string, int>());
+                stats[toolKeyValue.Key]["Среднее время работы(мс)"] = (int)toolKeyValue.Value.OpenTimeAvg;
             }
+
+            AnalysisResult result = new AnalysisResult();
+            result.Statistics = stats.ToArray();
+
+            SelectedSorting.SortingFunction(ref result);
 
             return result;
         }

@@ -45,60 +45,6 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        // Delegate type for a sorting function.
-        public delegate IOrderedEnumerable<KeyValuePair<string, Dictionary<string, int>>> AnalysisSortFunc(AnalysisResult data);
-
-        /// <summary>Represents a sorting for analyses results.</summary>
-        public class SortingVM
-        {
-            /// <summary>Russian name of the sorting.</summary>
-            public string Name { get; set; }
-
-            /// <summary>Instructions for the sorting.</summary>
-            public AnalysisSortFunc SortingFunction { get; set; }
-
-            public SortingVM(string name, AnalysisSortFunc sortingFunction)
-            {
-                Name = name;
-                SortingFunction = sortingFunction;
-            }
-        }
-
-        /// <summary>Available sortings.</summary>
-        public List<SortingVM> Sortings { get; } = new List<SortingVM>
-        {
-            // Alphabetically
-            new SortingVM("По алфавиту", // OrderByDescending is used because of upside down list inside the chart.
-                (AnalysisResult analysisResult) => analysisResult.Statistics.OrderByDescending(toolKeyValue => toolKeyValue.Key)),
-            
-            // Values ascending
-            new SortingVM("По возрастанию",
-                (AnalysisResult analysisResult) => analysisResult.Statistics.OrderByDescending(toolKeyValue => toolKeyValue.Value.Sum(statKeyValue => statKeyValue.Value))),
-
-            // Values descending
-            new SortingVM("По убыванию",
-                (AnalysisResult analysisResult) => analysisResult.Statistics.OrderBy(toolKeyValue => toolKeyValue.Value.Sum(statKeyValue => statKeyValue.Value)))
-        };
-
-        private SortingVM selectedSorting;
-        /// <summary>The sorting selected from the view.</summary>
-        public SortingVM SelectedSorting
-        {
-            get => selectedSorting;
-            set
-            {
-                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with the view.
-                SortAnalysisResult = SelectedSorting.SortingFunction;
-
-                if (AnalysisVM.SelectedAnalysis == null) { return; }
-
-                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
-            }
-        }
-
-        /// <summary>The sorting function of the selected sorting.</summary>
-        private static AnalysisSortFunc SortAnalysisResult { get; set; }
-
         /// <summary>Series of the chart.</summary>
         public SeriesCollection SeriesCollection { get; set; } = new SeriesCollection();
 
@@ -118,8 +64,7 @@ namespace XToolsAnalyzer.ViewModel
 
             public ChartData(AnalysisResult analysisResult)
             {
-                // Sort the raw info at first.
-                var resultStats = SortAnalysisResult(analysisResult);
+                var resultStats = analysisResult.Statistics;
 
                 // Get names of objects which were analysed.
                 Labels = resultStats.Select(objKeyValue => objKeyValue.Key).ToArray();
@@ -197,8 +142,6 @@ namespace XToolsAnalyzer.ViewModel
         public ResultsViewVM()
         {
             Instance = this;
-
-            SelectedSorting = Sortings.First();
         }
     }
 }

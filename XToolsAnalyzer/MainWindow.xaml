@@ -15,7 +15,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="185"/>
+            <ColumnDefinition Width="190"/>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
                    DockPanel.Dock="Top" Margin="4"/>
             <ScrollViewer>
                 <StackPanel Background="{StaticResource DarkBrush}">
-                    <TextBlock Text="По всем инструментам" Foreground="{StaticResource UltraLightBrush}"
+                    <TextBlock Text="По инструментам" Foreground="{StaticResource UltraLightBrush}"
                                FontWeight="DemiBold" Margin="4"/>
                     <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
                         <ItemsControl.ItemTemplate>
@@ -58,8 +58,33 @@
         </DockPanel>
 
         <DockPanel Grid.Column="2">
-            <TextBlock Style="{StaticResource Header}" Text="Результаты анализа"
+            <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
                        DockPanel.Dock="Top" Margin="4"/>
+            
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                <TextBlock Style="{StaticResource NormalText}" Text="Сортировка"
+                       HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="4"/>
+                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Sortings}"
+                      SelectedItem="{Binding SelectedSorting, Mode=TwoWay}" Margin="5 0 0 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Style="{StaticResource NormalText}" Text="Группировка"
+                       HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="4"/>
+                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Groupings}"
+                      SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="5 0 0 0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            
             <local:ResultsView/>
         </DockPanel>
     </Grid>

@@ -1,18 +1,28 @@
-﻿using XToolsAnalyzer.Model;
+﻿using System.Collections.ObjectModel;
+using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
     /// <summary>Class representing an analysis for the view so it can work with it.</summary>
     public class AnalysisVM
-    {
+    { 
+        private static AnalysisVM selectedAnalysis;
         /// <summary>Actually the last analysis that was made.</summary>
-        public static AnalysisVM SelectedAnalysis;
+        public static AnalysisVM SelectedAnalysis
+        {
+            get => selectedAnalysis;
+            set
+            {
+                selectedAnalysis = value;
+                MainVM.Instance.ResultsTitleText = $"Результаты анализа \"{selectedAnalysis.Name}\"";
+            }
+        }
 
         /// <summary>Model of the analysis.</summary>
-        private readonly Analysis analysis;
+        public readonly Analysis Analysis;
 
-        /// <summary>Analysis name.</summary>
-        public string Name => analysis.Name;
+        /// <summary>Russian name of the analysis.</summary>
+        public string Name => Analysis.Name;
 
         private RelayCommand analysisCommand;
         /// <summary>Command calling a function which replaces current info on the screen with results of the analysis.</summary>
@@ -23,13 +33,20 @@ namespace XToolsAnalyzer.ViewModel
                 return analysisCommand ?? // Make sure that the command's backing field was initialized and return it. 
                 (analysisCommand = new RelayCommand(obj =>
                 {
-                    SelectedAnalysis = this; // Remember this analysis
+                    if (SelectedAnalysis != this)
+                    {
+                        SelectedAnalysis = this; // Remember this analysis
 
-                    ResultsViewVM.Instance.CreateRowChart(analysis.GetAnalysisResult());
+                        MainVM.Instance.SelectedGrouping = Analysis.SelectedGrouping;
+                        MainVM.Instance.Groupings = Analysis.Groupings;
+                    }
+                    
+
+                    ResultsViewVM.Instance.CreateRowChart(Analysis.GetAnalysisResult());
                 }));
             }
         }
 
-        public AnalysisVM(Analysis analysis) => this.analysis = analysis;
+        public AnalysisVM(Analysis analysis) => Analysis = analysis;
     }
 }

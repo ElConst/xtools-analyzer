@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using XToolsAnalyzer.Model;
 
@@ -10,6 +11,53 @@ namespace XToolsAnalyzer.ViewModel
         public ObservableCollection<AnalysisVM> ToolsStatsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
         public ObservableCollection<AnalysisVM> XToolsSettingsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
 
+        private string resultsTitleText = "Результаты анализа";
+        /// <summary>Caption for the area with analyses results.</summary>
+        public string ResultsTitleText
+        {
+            get => resultsTitleText;
+            set => SetProperty(ref resultsTitleText, value);
+        }
+
+        private Analysis.Sorting selectedSorting = Analysis.Sorting.Instances.First();
+        /// <summary>The sorting selected from the view.</summary>
+        public Analysis.Sorting SelectedSorting
+        {
+            get => selectedSorting;
+            set
+            {
+                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with the view.
+                Analysis.SelectedSorting = selectedSorting;
+
+                if (AnalysisVM.SelectedAnalysis == null) { return; }
+
+                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
+            }
+        }
+
+        private string[] groupings;
+        public string[] Groupings
+        {
+            get => groupings;
+            set => SetProperty(ref groupings, value); // Raises PropertyChanged event to sync with the view.
+        }
+
+        private string selectedGrouping;
+        /// <summary>The grouping selected from the view.</summary>
+        public string SelectedGrouping
+        {
+            get => selectedGrouping;
+            set
+            {
+                SetProperty(ref selectedGrouping, value); // Raises PropertyChanged event to sync with the view.
+                AnalysisVM.SelectedAnalysis.Analysis.SelectedGrouping = selectedGrouping;
+
+                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
+            }
+        }
+
+        public List<Analysis.Sorting> Sortings => Analysis.Sorting.Instances;
+
         public static MainVM Instance;
         public MainVM()
         {
@@ -19,7 +67,7 @@ namespace XToolsAnalyzer.ViewModel
             DataLoader.DefaultFolderToLoad = @"d:\xtools";
 
             // Find existing analyses.
-            Analysis.Instances = ReflectiveEnumerator.GetEnumerableOfType<Analysis>().ToList();
+            Analysis.Instances = ReflectiveEnumerator.GetEnumerableOfType<Analysis>().OrderBy(a => a.Name).ToList();
 
             // Create objects which the View can interact with.
 

@@ -28,7 +28,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Name="border"
-                            Padding="10"
+                            Padding="8"
                             BorderThickness="1"
                             BorderBrush="{StaticResource UltraDarkBrush}"
                             CornerRadius="3"
@@ -37,7 +37,7 @@
                             <ContentPresenter HorizontalAlignment="Left"
                                               VerticalAlignment="Center" 
                                               Name="content" 
-                                              Margin="5 0 0 0"/>
+                                              Margin="2 0 0 0"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>

@@ -1,21 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace XToolsAnalyzer.Model
 {
     /// <summary>Analyses amount and types of tools input data.</summary>
-    public class InputDataAnalysis : Analysis
+    public class InputDataTypeAnalysis : Analysis
     {
-        public InputDataAnalysis()
+        public InputDataTypeAnalysis()
         {
-            Name = "Входные данные";
+            Name = "Тип входных данных";
             Type = AnalysisType.ToolsStats;
+            SelectedGrouping = Groupings[0];
         }
+
+        private static string 
+            ToolGrouping = "По инструментам",
+            VersionGrouping = "По версиям";
+
+        private string[] groupings = { ToolGrouping, VersionGrouping };
+        public override string[] Groupings => groupings;
 
         /// <summary>Gets amount of uses of objects of different data types by each tool</summary>
         public override AnalysisResult GetAnalysisResult()
         {
-            AnalysisResult result = new AnalysisResult(); // Value to return
+            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
@@ -29,24 +38,31 @@ namespace XToolsAnalyzer.Model
                         if (!dataTypeMatch.Success) { continue; } // Skip if it's not about input data types.
                         string dataType = dataTypeMatch.Value; // Else get the type name.
 
-                        if (!result.Statistics.ContainsKey(tool.ToolName))
+                        string objKey = SelectedGrouping == ToolGrouping ? tool.ToolName : report.ProductVersion;
+
+                        if (!stats.ContainsKey(objKey))
                         {
-                            // If there was no information about this tool before, add a container for the info
-                            result.Statistics.Add(tool.ToolName, new Dictionary<string, int>());
+                            // If there was no information about this object of analysis before, add a container for it.
+                            stats.Add(objKey, new Dictionary<string, int>());
                         }
-                        if (!result.Statistics[tool.ToolName].ContainsKey(dataType))
+                        if (!stats[objKey].ContainsKey(dataType))
                         {
                             // Also add a container for the info about the type
-                            result.Statistics[tool.ToolName].Add(dataType, int.Parse(stat.Value));
+                            stats[objKey].Add(dataType, int.Parse(stat.Value));
                         }
                         else
                         {
                             // If there already is a container, just sum old and new values.
-                            result.Statistics[tool.ToolName][dataType] += int.Parse(stat.Value);
+                            stats[objKey][dataType] += int.Parse(stat.Value);
                         }
                     }
                 }
             }
+
+            AnalysisResult result = new AnalysisResult();
+            result.Statistics = stats.ToArray();
+
+            SelectedSorting.SortingFunction(ref result);
 
             return result;
         }
