@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using XToolsAnalyzer.Model;
+﻿using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
@@ -16,6 +15,14 @@ namespace XToolsAnalyzer.ViewModel
                 selectedAnalysis = value;
                 MainVM.Instance.ResultsTitleText = $"Результаты анализа \"{selectedAnalysis.Name}\"";
             }
+        }
+
+        /// <summary>Makes the selected analysis if it is specified.</summary>
+        public static void MakeSelectedAnalysis()
+        {
+            if (SelectedAnalysis == null) { return; }
+
+            SelectedAnalysis.AnalysisCommand.Execute("");
         }
 
         /// <summary>Model of the analysis.</summary>

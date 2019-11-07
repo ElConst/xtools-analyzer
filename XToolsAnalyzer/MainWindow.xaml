@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:XToolsAnalyzer"
         xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="900"
+        Title="XTools Analyzer" Height="450" Width="900"
         Background="{StaticResource UltraLightBrush}">
 
     <Window.DataContext>
@@ -16,7 +16,6 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="190"/>
-            <ColumnDefinition Width="200"/>
             <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
 
@@ -30,7 +29,7 @@
                     <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Margin="0 2 0 2"
+                                <Button Style="{StaticResource NormalButton}" Width="150" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -41,7 +40,7 @@
                     <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource AnalysisTypeBtn}" Width="150" Margin="0 2 0 2"
+                                <Button Style="{StaticResource NormalButton}" Width="150" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -51,20 +50,13 @@
         </DockPanel>
 
         <DockPanel Grid.Column="1">
-            <TextBlock Style="{StaticResource Header}" Text="Фильтр"
-                   VerticalAlignment="Center" Margin="4" DockPanel.Dock="Top"/>
-            
-            <WrapPanel Background="{StaticResource MediumBrush}"></WrapPanel>
-        </DockPanel>
-
-        <DockPanel Grid.Column="2">
             <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
                        DockPanel.Dock="Top" Margin="4"/>
-            
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+
+            <DockPanel DockPanel.Dock="Top" LastChildFill="False" Height="25">
                 <TextBlock Style="{StaticResource NormalText}" Text="Сортировка"
-                       HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="4"/>
-                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Sortings}"
+                       DockPanel.Dock="Left" Margin="4"/>
+                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Sortings}"
                       SelectedItem="{Binding SelectedSorting, Mode=TwoWay}" Margin="5 0 0 0">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -74,8 +66,8 @@
                 </ComboBox>
 
                 <TextBlock Style="{StaticResource NormalText}" Text="Группировка"
-                       HorizontalAlignment="Left" DockPanel.Dock="Left" Margin="4"/>
-                <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding Groupings}"
+                       DockPanel.Dock="Left" Margin="4"/>
+                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groupings}"
                       SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="5 0 0 0">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -83,7 +75,11 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-            </StackPanel>
+
+                <Button Style="{StaticResource NormalButton}" DockPanel.Dock="Right" Margin="0 0 17 0"
+                        FontWeight="Medium" FontSize="10"
+                        Content="Настроить фильтр" Command="{Binding OpenFilterWindowCommand}"/>
+            </DockPanel>
             
             <local:ResultsView/>
         </DockPanel>

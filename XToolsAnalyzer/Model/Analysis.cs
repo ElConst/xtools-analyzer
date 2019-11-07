@@ -9,6 +9,7 @@ namespace XToolsAnalyzer.Model
         /// <summary>Existing analyses list.</summary>
         public static List<Analysis> Instances;
 
+        /// <summary>Enumeration of diffent kinds of analyses.</summary>
         public enum AnalysisType
         {
             ToolsStats,
@@ -18,12 +19,16 @@ namespace XToolsAnalyzer.Model
         /// <summary>Russian name of the analysis.</summary>
         public string Name { get; protected set; }
 
+        /// <summary>What kind of analysis this is.</summary>
         public AnalysisType Type;
 
+        /// <summary>Grouping modes available for the analysis.</summary>
         public abstract string[] Groupings { get; }
 
+        /// <summary>Grouping mode selected for this analysis at the moment.</summary>
         public string SelectedGrouping;
 
+        /// <summary>Does sorting for analyses results.</summary>
         public class Sorting
         {
             // Delegate type for a sorting function.
@@ -41,6 +46,7 @@ namespace XToolsAnalyzer.Model
                 SortingFunction = sortingFunction;
             }
 
+            /// <summary>Currently available sortings.</summary>
             public static List<Sorting> Instances { get; } = new List<Sorting>
             {
                 // Alphabetically
@@ -69,6 +75,7 @@ namespace XToolsAnalyzer.Model
             };
         }
 
+        /// <summary>Sorting selected at the moment.</summary>
         public static Sorting SelectedSorting = Sorting.Instances.First();
 
         /// <summary>Does the analysis</summary>
@@ -78,7 +85,7 @@ namespace XToolsAnalyzer.Model
     /// <summary>Class containing results of an analysis.</summary>
     public class AnalysisResult
     {
-        /// <summary>Collection of statistics.</summary>
+        /// <summary>Collection of statistics which were analysed.</summary>
         public KeyValuePair<string, Dictionary<string, int>>[] Statistics;
     }
 }

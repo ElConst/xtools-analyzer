@@ -8,7 +8,9 @@ namespace XToolsAnalyzer.ViewModel
     /// <summary>Viewmodel containing logic for the 'MainWindow' view.</summary>
     public class MainVM : ViewModelBase
     {
+        /// <summary>Collection of analyses working with common statistics of tools.</summary>
         public ObservableCollection<AnalysisVM> ToolsStatsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
+        /// <summary>Collection of analyses working with information about options of the XTools itself.</summary>
         public ObservableCollection<AnalysisVM> XToolsSettingsAnalyses { get; set; } = new ObservableCollection<AnalysisVM>();
 
         private string resultsTitleText = "Результаты анализа";
@@ -29,13 +31,12 @@ namespace XToolsAnalyzer.ViewModel
                 SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with the view.
                 Analysis.SelectedSorting = selectedSorting;
 
-                if (AnalysisVM.SelectedAnalysis == null) { return; }
-
-                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
+                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
         private string[] groupings;
+        /// <summary>Data grouping modes available for the selected analysis.</summary>
         public string[] Groupings
         {
             get => groupings;
@@ -52,11 +53,25 @@ namespace XToolsAnalyzer.ViewModel
                 SetProperty(ref selectedGrouping, value); // Raises PropertyChanged event to sync with the view.
                 AnalysisVM.SelectedAnalysis.Analysis.SelectedGrouping = selectedGrouping;
 
-                AnalysisVM.SelectedAnalysis.AnalysisCommand.Execute("");
+                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
         public List<Analysis.Sorting> Sortings => Analysis.Sorting.Instances;
+
+        private RelayCommand openFilterWindowCommand;
+        /// <summary>Shows the filter window.</summary>
+        public RelayCommand OpenFilterWindowCommand
+        {
+            get
+            {
+                return openFilterWindowCommand ?? // Make sure that the command's backing field was initialized and return it. 
+                (openFilterWindowCommand = new RelayCommand(args =>
+                {
+                    FilterWindow.Instance.Show();
+                }));
+            }
+        }
 
         public static MainVM Instance;
         public MainVM()
