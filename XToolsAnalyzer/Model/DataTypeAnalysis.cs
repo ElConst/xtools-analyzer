@@ -4,12 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace XToolsAnalyzer.Model
 {
-    /// <summary>Analyses amount and types of tools output data.</summary>
-    public class OutputDataTypeAnalysis : Analysis
+    public abstract class DataTypeAnalysis : Analysis
     {
-        public OutputDataTypeAnalysis()
+        public DataTypeAnalysis()
         {
-            Name = "Тип выходных данных";
+            Name = "Тип входных данных";
             Type = AnalysisType.ToolsStats;
             SelectedGrouping = Groupings[0];
         }
@@ -21,7 +20,11 @@ namespace XToolsAnalyzer.Model
         private string[] groupings = { ToolGrouping, VersionGrouping };
         public override string[] Groupings => groupings;
 
-        /// <summary>Gets amount of objects of different data types in the output of each tool</summary>
+        public enum Data { Input, Output }
+
+        public Data DataAnalysed;
+
+        /// <summary>Gets amount of times objects of different types used.</summary>
         public override AnalysisResult GetAnalysisResult()
         {
             Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
@@ -32,10 +35,10 @@ namespace XToolsAnalyzer.Model
                 {
                     foreach (var stat in tool.ExecutorStats)
                     {
-                        // Make regex match in the tool name to find out if the statistic is what we are looking for.
-                        Match dataTypeMatch = Regex.Match(stat.Key, @"(?<=(OutputData\.Type\.)).*");
+                        // Make regex match in the statistic name to find out if the statistic is what we are looking for.
+                        Match dataTypeMatch = Regex.Match(stat.Key, $@"(?<=({(DataAnalysed == Data.Input ? "Input" : "Output")}Data\.Type\.)).*");
 
-                        if (!dataTypeMatch.Success) { continue; } // Skip if it's not about output data types.
+                        if (!dataTypeMatch.Success) { continue; } // Skip if it's not about data types.
                         string dataType = dataTypeMatch.Value; // Else get the type name.
 
                         string objKey = SelectedGrouping == ToolGrouping ? tool.ToolName : report.ProductVersion;
@@ -65,6 +68,24 @@ namespace XToolsAnalyzer.Model
             SelectedSorting.SortingFunction(ref result);
 
             return result;
+        }
+    }
+
+    public class InputDataTypeAnalysis : DataTypeAnalysis
+    {
+        public InputDataTypeAnalysis()
+        {
+            Name = "Тип входных данных";
+            DataAnalysed = Data.Input;
+        }
+    }
+
+    public class OutputDataTypeAnalysis : DataTypeAnalysis
+    {
+        public OutputDataTypeAnalysis()
+        {
+            Name = "Тип выходных данных";
+            DataAnalysed = Data.Output;
         }
     }
 }

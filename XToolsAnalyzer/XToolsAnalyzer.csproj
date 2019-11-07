@@ -70,9 +70,9 @@
     <Compile Include="Model\Analysis.cs" />
     <Compile Include="Model\ClicksAnalysis.cs" />
     <Compile Include="Model\ColorSchemeAnalysis.cs" />
-    <Compile Include="Model\InputDataTypeAnalysis.cs" />
+    <Compile Include="Model\DataTypeAnalysis.cs" />
+    <Compile Include="Model\InputAvgAmountAnalysis.cs" />
     <Compile Include="Model\OpenTimeAvgAnalysis.cs" />
-    <Compile Include="Model\OutputDataTypeAnalysis.cs" />
     <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
     <Compile Include="Model\ToolUsageData.cs" />

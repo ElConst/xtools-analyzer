@@ -15,7 +15,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="230"/>
             <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
 
@@ -29,7 +29,7 @@
                     <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource NormalButton}" Width="150" Margin="0 2 0 2"
+                                <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -40,7 +40,7 @@
                     <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource NormalButton}" Width="150" Margin="0 2 0 2"
+                                <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
