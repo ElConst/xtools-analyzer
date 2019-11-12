@@ -14,7 +14,7 @@
     <DockPanel>
         <ScrollViewer>
             <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}"  Margin="0 10 10 0"
-                            Zoom="X" DisableAnimations="True" LegendLocation="Top" VerticalAlignment="Top">
+                            Zoom="X" DisableAnimations="True" LegendLocation="None" VerticalAlignment="Top">
                 <lvc:CartesianChart.DataTooltip>
                     <lvc:DefaultTooltip SelectionMode="SharedYValues"></lvc:DefaultTooltip>
                 </lvc:CartesianChart.DataTooltip>

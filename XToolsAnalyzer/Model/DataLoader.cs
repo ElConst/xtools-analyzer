@@ -55,6 +55,9 @@ namespace XToolsAnalyzer.Model
                 // Collect statistics from each tool
                 foreach (var toolJProp in toolsUsed)
                 {
+                    // Skip if the filter tells not to show info about the tool.
+                    if (Filter.Instance != null && !Filter.Instance.ToolsFilter[toolJProp.Name]) { continue; }
+
                     // Will contain statistics for one XTool usage within a period
                     ToolUsageData toolData = new ToolUsageData(toolJProp.Name);
 

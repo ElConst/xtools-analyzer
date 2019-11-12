@@ -11,8 +11,7 @@ namespace XToolsAnalyzer
         {
             get
             {
-                if (instance == null) { instance = new FilterWindow(); }
-
+                if (instance == null || !instance.IsLoaded) { instance = new FilterWindow(); }
                 return instance;
             }
         }

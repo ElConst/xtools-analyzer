@@ -79,7 +79,9 @@ namespace XToolsAnalyzer.ViewModel
             Instance = this;
 
             // Path to the folder with JSONs required here.
-            DataLoader.DefaultFolderToLoad = @"d:\a";
+            DataLoader.DefaultFolderToLoad = @"d:\xtools";
+
+            Filter.Instance = new Filter();
 
             // Find existing analyses.
             Analysis.Instances = ReflectiveEnumerator.GetEnumerableOfType<Analysis>().OrderBy(a => a.Name).ToList();
