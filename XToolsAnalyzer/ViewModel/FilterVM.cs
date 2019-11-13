@@ -43,6 +43,40 @@ namespace XToolsAnalyzer.ViewModel
             set => SetProperty(ref toolsFilter, value); // Raises PropertyChanged event to sync with the view.
         }
 
+        private RelayCommand selectAllTools;
+        /// <summary>Makes all tools selected in the filter.</summary>
+        public RelayCommand SelectAllTools
+        {
+            get
+            {
+                return selectAllTools ?? // Make sure that the command's backing field was initialized and return it. 
+                (selectAllTools = new RelayCommand(args =>
+                {
+                    foreach (var toolSelection in ToolsFilter)
+                    { 
+                        toolSelection.Selected = true;
+                    }
+                }));
+            }
+        }
+
+        private RelayCommand removeToolsSelection;
+        /// <summary>Makes all tools not selected in the filter.</summary>
+        public RelayCommand RemoveToolsSelection
+        {
+            get
+            {
+                return removeToolsSelection ?? // Make sure that the command's backing field was initialized and return it. 
+                (removeToolsSelection = new RelayCommand(args =>
+                {
+                    foreach (var toolSelection in ToolsFilter)
+                    {
+                        toolSelection.Selected = false;
+                    }
+                }));
+            }
+        }
+
         private RelayCommand openToolsFilterCommand;
         /// <summary>Open tools filter menu and hide main filter.</summary>
         public RelayCommand OpenToolsFilterCommand
@@ -62,6 +96,21 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
+        private RelayCommand cancelToolsFilterChanges;
+        /// <summary>Close tools filter menu without saving changes.</summary>
+        // (basically means just to hide it, because the changes will be erased after user opens the tools filter again).
+        public RelayCommand CancelToolsFilterChanges
+        {
+            get
+            {
+                return cancelToolsFilterChanges ?? // Make sure that the command's backing field was initialized and return it. 
+                (cancelToolsFilterChanges = new RelayCommand(args =>
+                {
+                    SwitchToolsFilterVisibility(); // Hide the tools filter, show the main filter
+                }));
+            }
+        }
+
         private RelayCommand closeToolsFilterCommand;
         /// <summary>Close tools filter menu and show main filter after saving changes.</summary>
         public RelayCommand CloseToolsFilterCommand
@@ -73,6 +122,9 @@ namespace XToolsAnalyzer.ViewModel
                 {
                     // Update the tools filter inside the model
                     Filter.Instance.ToolsFilter = ToolsFilter.ToDictionary(t => t.Name, t => t.Selected);
+
+                    // Make last analysis again with new filter
+                    AnalysisVM.MakeSelectedAnalysis();
 
                     SwitchToolsFilterVisibility(); // Hide the tools filter, show the main filter
                 }));
