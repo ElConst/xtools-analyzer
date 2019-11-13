@@ -49,15 +49,14 @@
                     DockPanel.Dock="Right" Margin="10"/>
             </DockPanel>
 
-            
-
             <ScrollViewer DockPanel.Dock="Bottom">
-                <ItemsControl ItemsSource="{Binding ToolsFilter, Mode=TwoWay}" Background="{StaticResource LightBrush}">
+                <ItemsControl ItemsSource="{Binding ToolsFilter, Mode=TwoWay}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel LastChildFill="False">
+                            <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}" Margin="0 1 0 1">
                                 <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}" Margin="5 0 0 0"/>
-                                <CheckBox IsChecked="{Binding Path=Selected, Mode=TwoWay}" DockPanel.Dock="Right"/>
+                                <CheckBox IsChecked="{Binding Path=Selected, Mode=TwoWay}" 
+                                          DockPanel.Dock="Right" Background="{StaticResource UltraLightBrush}"/>
                             </DockPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

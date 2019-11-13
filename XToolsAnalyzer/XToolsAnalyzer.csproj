@@ -68,12 +68,13 @@
       <DependentUpon>FilterWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Analysis.cs" />
-    <Compile Include="Model\ClicksAnalysis.cs" />
-    <Compile Include="Model\ColorSchemeAnalysis.cs" />
-    <Compile Include="Model\DataTypeAnalysis.cs" />
+    <Compile Include="Model\Analyses\ClicksAnalysis.cs" />
+    <Compile Include="Model\Analyses\ColorSchemeAnalysis.cs" />
+    <Compile Include="Model\Analyses\DataTypeAnalysis.cs" />
+    <Compile Include="Model\AvgAnalysis.cs" />
     <Compile Include="Model\Filter.cs" />
-    <Compile Include="Model\InputAvgAmountAnalysis.cs" />
-    <Compile Include="Model\OpenTimeAvgAnalysis.cs" />
+    <Compile Include="Model\Analyses\InputAvgAmountAnalysis.cs" />
+    <Compile Include="Model\Analyses\OpenTimeAvgAnalysis.cs" />
     <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
     <Compile Include="Model\ToolUsageData.cs" />

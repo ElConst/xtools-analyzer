@@ -16,11 +16,11 @@ namespace XToolsAnalyzer.Model
             XToolsSettings
         }
 
-        /// <summary>Russian name of the analysis.</summary>
-        public string Name { get; protected set; }
-
         /// <summary>What kind of analysis this is.</summary>
         public AnalysisType Type;
+
+        /// <summary>Russian name of the analysis.</summary>
+        public string Name { get; protected set; }
 
         /// <summary>Grouping modes available for the analysis.</summary>
         public abstract string[] Groupings { get; }
@@ -78,8 +78,29 @@ namespace XToolsAnalyzer.Model
         /// <summary>Sorting selected at the moment.</summary>
         public static Sorting SelectedSorting = Sorting.Instances.First();
 
-        /// <summary>Does the analysis</summary>
-        public abstract AnalysisResult GetAnalysisResult();
+        /// <summary>Does the analysis and returns a result</summary>
+        public virtual AnalysisResult GetAnalysisResult()
+        {
+            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
+
+            foreach (StatisticsReport report in DataLoader.LoadFromFolder())
+            {
+                foreach (ToolUsageData tool in report.ToolsUsed)
+                {
+                    ProcessToolUsageData(ref stats, report, tool);
+                }
+            }
+
+            AnalysisResult result = new AnalysisResult();
+            result.Statistics = stats.ToArray();
+
+            SelectedSorting.SortingFunction(ref result);
+
+            return result;
+        }
+
+        /// <summary>Collects something in single ToolUsageData</summary>
+        protected abstract void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool);
     }
 
     /// <summary>Class containing results of an analysis.</summary>
