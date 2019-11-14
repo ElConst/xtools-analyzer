@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
@@ -7,12 +6,48 @@ namespace XToolsAnalyzer.ViewModel
     public class FilterVM : ViewModelBase 
     {
         private bool mainUIVisibility = true;
-        /// <summary>Visibility of the main filter.</summary>
+        /// <summary>Visibility of the main filter menu.</summary>
         public bool MainUIVisibility 
         {
             get => mainUIVisibility;
             set => SetProperty(ref mainUIVisibility, value); // Raises PropertyChanged event to sync with the view.
         }
+
+        #region Products
+
+        private bool xtoolsAgpSelected;
+        /// <summary>Is "XTools AGP" checked in the filter view.</summary>
+        public bool XToolsAgpSelected
+        {
+            get => xtoolsAgpSelected;
+            set
+            {
+                SetProperty(ref xtoolsAgpSelected, value); // Raises PropertyChanged event to sync with the view.
+                Filter.Instance.ShowXToolsAgp = value;
+
+                // Make last analysis again with new filter
+                AnalysisVM.MakeSelectedAnalysis();
+            }
+        }
+
+        private bool xtoolsProSelected;
+        /// <summary>Is "XTools Pro" checked in the filter view.</summary>
+        public bool XToolsProSelected
+        {
+            get => xtoolsProSelected;
+            set
+            {
+                SetProperty(ref xtoolsProSelected, value); // Raises PropertyChanged event to sync with the view.
+                Filter.Instance.ShowXToolsPro = value;
+
+                // Make last analysis again with new filter
+                AnalysisVM.MakeSelectedAnalysis();
+            }
+        }
+
+        #endregion
+
+        #region Tools
 
         private bool toolsSelectUIVisibility = false;
         /// <summary>Visibility of the tools selection menu.</summary>
@@ -136,6 +171,14 @@ namespace XToolsAnalyzer.ViewModel
         {
             ToolsSelectUIVisibility = MainUIVisibility;
             MainUIVisibility = !MainUIVisibility;
+        }
+
+        #endregion
+
+        public FilterVM()
+        {
+            XToolsAgpSelected = Filter.Instance.ShowXToolsAgp;
+            XToolsProSelected = Filter.Instance.ShowXToolsPro;
         }
     }
 }

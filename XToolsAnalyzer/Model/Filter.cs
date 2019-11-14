@@ -7,6 +7,10 @@ namespace XToolsAnalyzer.Model
     {
         public static Filter Instance;
 
+        /// <summary>Tells if we need to take this product statistics into account.</summary>
+        public bool ShowXToolsAgp = true,
+                    ShowXToolsPro = true;
+
         /// <summary>Collection of tool names each connected to a bool which tells if it is selected for the filter or not.</summary>
         public Dictionary<string, bool> ToolsFilter;
 

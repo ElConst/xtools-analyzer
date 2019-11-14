@@ -45,9 +45,18 @@ namespace XToolsAnalyzer.Model
 
                 JObject rootJObj = JObject.Parse(json); // The whole JSON in a JObject
 
-                string productVersion = rootJObj.GetValue("ProductVersion")?.ToString();
-                if (productVersion == null) { productVersion = rootJObj.GetValue("Version")?.ToString(); }
+                string productName = rootJObj.GetValue("ProductName")?.ToString();
+                string productVersion = rootJObj.GetValue("ProductVersion")?.ToString() ?? rootJObj.GetValue("Version")?.ToString();
 
+                // Skip if the filter tells not to show statistics from this product.
+                if (Filter.Instance != null &&
+                    (productName == "XTools Pro" && !Filter.Instance.ShowXToolsPro ||
+                     productName == "XTools AGP" && !Filter.Instance.ShowXToolsAgp))
+                {
+                    continue;
+                }
+
+                stats.ProductName = productName;
                 stats.ProductVersion = productVersion;
 
                 // Get list of tools from the value of the "Items" property

@@ -35,12 +35,27 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
+        private bool groupingComboBoxEnabled;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool GroupingComboBoxEnabled
+        {
+            get => groupingComboBoxEnabled;
+            set => SetProperty(ref groupingComboBoxEnabled, value);
+        }
+
         private string[] groupings;
         /// <summary>Data grouping modes available for the selected analysis.</summary>
         public string[] Groupings
         {
             get => groupings;
-            set => SetProperty(ref groupings, value); // Raises PropertyChanged event to sync with the view.
+            set
+            {
+                SetProperty(ref groupings, value); // Raises PropertyChanged event to sync with the view.
+
+                GroupingComboBoxEnabled = Groupings.Length > 1;
+            }
         }
 
         private string selectedGrouping;
@@ -79,7 +94,7 @@ namespace XToolsAnalyzer.ViewModel
             Instance = this;
 
             // Path to the folder with JSONs required here.
-            DataLoader.DefaultFolderToLoad = @"d:\xtools";
+            DataLoader.DefaultFolderToLoad = @"d:\a";
 
             Filter.Instance = new Filter();
 

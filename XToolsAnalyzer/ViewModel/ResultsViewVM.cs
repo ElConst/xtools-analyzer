@@ -14,6 +14,22 @@ namespace XToolsAnalyzer.ViewModel
         public static ResultsViewVM Instance;
 
 
+        private bool welcomeTextVisibility = true;
+        /// <summary>Text which is shown when the chart is hidden.</summary>
+        public bool WelcomeTextVisibility => welcomeTextVisibility;
+
+        private bool chartVisibility = false;
+        /// <summary>Is used to hide chart if it is empty.</summary>
+        public bool ChartVisibility
+        {
+            get => chartVisibility;
+            set
+            {
+                SetProperty(ref chartVisibility, value);
+                SetProperty(ref welcomeTextVisibility, !value, "WelcomeTextVisibility");
+            }
+        }
+
         private ObservableCollection<string> labels = new ObservableCollection<string>();
         /// <summary>Labels for the chart's y axis.</summary>
         public ObservableCollection<string> Labels
@@ -108,6 +124,9 @@ namespace XToolsAnalyzer.ViewModel
         {
             // Clear the old information.
             if (SeriesCollection != null) { SeriesCollection.Clear(); }
+
+            // If it's the first chart in this session, show the chart view because it is hidden by default
+            if (!ChartVisibility) { ChartVisibility = true; }
 
             ChartData data = new ChartData(analysisResult);
 

@@ -20,7 +20,22 @@
         <StackPanel Visibility="{Binding MainUIVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock Style="{StaticResource Header}" Text="Фильтр" Margin="5"/>
 
-            <TextBlock Style="{StaticResource NormalText}" Text="По инструментам" Margin="5 5 0 0"/>
+            <TextBlock Style="{StaticResource NormalText}" Text="По продуктам" 
+                       FontWeight="DemiBold" Margin="5 5 0 0"/>
+            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                <TextBlock Style="{StaticResource NormalText}" Text="XTools AGP"
+                           Margin="5 5 0 0"/>
+                <CheckBox IsChecked="{Binding XToolsAgpSelected}"
+                          Background="{StaticResource UltraLightBrush}" Margin="5 5 0 0"/>
+
+                <TextBlock Style="{StaticResource NormalText}" Text="XTools Pro"
+                           Margin="5 5 0 0"/>
+                <CheckBox IsChecked="{Binding XToolsProSelected}"
+                          Background="{StaticResource UltraLightBrush}" Margin="5 5 0 0"/>
+            </StackPanel>
+
+            <TextBlock Style="{StaticResource Header}" Text="По инструментам"
+                       FontWeight="DemiBold" Margin="5 5 0 0"/>
             <Button Command="{Binding OpenToolsFilterCommand}" Content="Изменить"
                     Style="{StaticResource NormalButton}"
                     HorizontalAlignment="Left" Margin="10 5 0 0"/>

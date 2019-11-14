@@ -67,7 +67,7 @@
 
                 <TextBlock Style="{StaticResource NormalText}" Text="Группировка"
                        DockPanel.Dock="Left" Margin="4"/>
-                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groupings}"
+                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}"
                       SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="5 0 0 0">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -78,7 +78,7 @@
 
                 <Button Style="{StaticResource NormalButton}" DockPanel.Dock="Right" Margin="0 0 17 0"
                         FontWeight="Medium" FontSize="10"
-                        Content="Настроить фильтр" Command="{Binding OpenFilterWindowCommand}"/>
+                        Content="Фильтр" Command="{Binding OpenFilterWindowCommand}"/>
             </DockPanel>
             
             <local:ResultsView/>

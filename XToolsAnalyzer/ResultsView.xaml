@@ -11,8 +11,16 @@
         <vm:ResultsViewVM/>
     </UserControl.DataContext>
 
-    <DockPanel>
-        <ScrollViewer>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <TextBlock Style="{StaticResource NormalText}" Text="Чтобы начать, выберите анализ в списке слева."
+                   Visibility="{Binding WelcomeTextVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <ScrollViewer Visibility="{Binding ChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}"  Margin="0 10 10 0"
                             Zoom="X" DisableAnimations="True" LegendLocation="None" VerticalAlignment="Top">
                 <lvc:CartesianChart.DataTooltip>
@@ -30,5 +38,7 @@
                 </lvc:CartesianChart.AxisY>
             </lvc:CartesianChart>
         </ScrollViewer>
-    </DockPanel>
+    </Grid>
+    
+        
 </UserControl>
