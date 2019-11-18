@@ -21,24 +21,8 @@ namespace XToolsAnalyzer.ViewModel
             set => SetProperty(ref resultsTitleText, value);
         }
 
-        private Analysis.Sorting selectedSorting = Analysis.Sorting.Instances.First();
-        /// <summary>The sorting selected from the view.</summary>
-        public Analysis.Sorting SelectedSorting
-        {
-            get => selectedSorting;
-            set
-            {
-                SetProperty(ref selectedSorting, value); // Raises PropertyChanged event to sync with the view.
-                Analysis.SelectedSorting = selectedSorting;
-
-                AnalysisVM.MakeSelectedAnalysis();
-            }
-        }
-
         private bool groupingComboBoxEnabled;
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Tells if user can choose a data grouping mode from the view.</summary>
         public bool GroupingComboBoxEnabled
         {
             get => groupingComboBoxEnabled;
@@ -72,8 +56,6 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        public List<Analysis.Sorting> Sortings => Analysis.Sorting.Instances;
-
         private RelayCommand openFilterWindowCommand;
         /// <summary>Shows the filter window.</summary>
         public RelayCommand OpenFilterWindowCommand
@@ -94,7 +76,7 @@ namespace XToolsAnalyzer.ViewModel
             Instance = this;
 
             // Path to the folder with JSONs required here.
-            DataLoader.DefaultFolderToLoad = @"d:\a";
+            DataLoader.DefaultFolderToLoad = @"d:\xtools";
 
             Filter.Instance = new Filter();
 

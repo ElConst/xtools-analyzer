@@ -43,10 +43,7 @@ namespace XToolsAnalyzer.Model
                 stats[toolKeyValue.Key][StatisticName] = (int)toolKeyValue.Value.AvgStat;
             }
 
-            AnalysisResult result = new AnalysisResult();
-            result.Statistics = stats.ToArray();
-
-            SelectedSorting.SortingFunction(ref result);
+            AnalysisResult result = new AnalysisResult(stats.ToArray());
 
             return result;
         }

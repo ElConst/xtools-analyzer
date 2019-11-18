@@ -13,6 +13,7 @@ namespace XToolsAnalyzer.ViewModel
             set
             {
                 selectedAnalysis = value;
+
                 MainVM.Instance.ResultsTitleText = $"Результаты анализа \"{selectedAnalysis.Name}\"";
             }
         }
@@ -40,16 +41,22 @@ namespace XToolsAnalyzer.ViewModel
                 return analysisCommand ?? // Make sure that the command's backing field was initialized and return it. 
                 (analysisCommand = new RelayCommand(obj =>
                 {
+                    AnalysisResult analysisResult = Analysis.GetAnalysisResult();
+
+                    // If analysis is changed
                     if (SelectedAnalysis != this)
                     {
-                        SelectedAnalysis = this; // Remember this analysis
+                        // Remember this analysis
+                        SelectedAnalysis = this; 
 
+                        // Update view
                         MainVM.Instance.SelectedGrouping = Analysis.SelectedGrouping;
                         MainVM.Instance.Groupings = Analysis.Groupings;
+                        SortingOptionsVM.Instance.CreateOptionsToSortAnAnalysisResult(analysisResult);
                     }
-                    
 
-                    ResultsViewVM.Instance.CreateRowChart(Analysis.GetAnalysisResult());
+                    SortingOptionsVM.Instance.Sort(ref analysisResult);
+                    ResultsViewVM.Instance.CreateRowChart(analysisResult);
                 }));
             }
         }

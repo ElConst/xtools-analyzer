@@ -81,9 +81,13 @@
     <Compile Include="ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SortingOptionsView.xaml.cs">
+      <DependentUpon>SortingOptionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AnalysisVM.cs" />
     <Compile Include="ViewModel\FilterVM.cs" />
     <Compile Include="ViewModel\ResultsViewVM.cs" />
+    <Compile Include="ViewModel\SortingOptionsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
@@ -113,6 +117,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SortingOptionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

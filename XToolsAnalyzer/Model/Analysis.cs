@@ -28,56 +28,6 @@ namespace XToolsAnalyzer.Model
         /// <summary>Grouping mode selected for this analysis at the moment.</summary>
         public string SelectedGrouping;
 
-        /// <summary>Does sorting for analyses results.</summary>
-        public class Sorting
-        {
-            // Delegate type for a sorting function.
-            public delegate void SortFunc(ref AnalysisResult data);
-
-            /// <summary>Instructions for the sorting.</summary>
-            public SortFunc SortingFunction { get; set; }
-
-            /// <summary>Russian name of the sorting.</summary>
-            public string Name { get; set; }
-
-            public Sorting(string name, SortFunc sortingFunction)
-            {
-                Name = name;
-                SortingFunction = sortingFunction;
-            }
-
-            /// <summary>Currently available sortings.</summary>
-            public static List<Sorting> Instances { get; } = new List<Sorting>
-            {
-                // Alphabetically
-                new Sorting("По алфавиту", // OrderByDescending is used because of upside down list inside the chart.
-                    (ref AnalysisResult analysisResult) =>
-                    {
-                        analysisResult.Statistics = 
-                            analysisResult.Statistics.OrderByDescending(obj => obj.Key).ToArray();
-                    }),
-            
-                // Values ascending
-                new Sorting("По возрастанию",
-                    (ref AnalysisResult analysisResult) =>
-                    {
-                        analysisResult.Statistics =
-                            analysisResult.Statistics.OrderByDescending(obj => obj.Value.Sum(stat => stat.Value)).ToArray();
-                    }),
-
-                // Values descending
-                new Sorting("По убыванию",
-                    (ref AnalysisResult analysisResult) =>
-                    {
-                        analysisResult.Statistics = 
-                            analysisResult.Statistics.OrderBy(obj => obj.Value.Sum(stat => stat.Value)).ToArray();
-                    })
-            };
-        }
-
-        /// <summary>Sorting selected at the moment.</summary>
-        public static Sorting SelectedSorting = Sorting.Instances.First();
-
         /// <summary>Does the analysis and returns a result</summary>
         public virtual AnalysisResult GetAnalysisResult()
         {
@@ -91,10 +41,7 @@ namespace XToolsAnalyzer.Model
                 }
             }
 
-            AnalysisResult result = new AnalysisResult();
-            result.Statistics = stats.ToArray();
-
-            SelectedSorting.SortingFunction(ref result);
+            AnalysisResult result = new AnalysisResult(stats.ToArray());
 
             return result;
         }
@@ -108,5 +55,25 @@ namespace XToolsAnalyzer.Model
     {
         /// <summary>Collection of statistics which were analysed.</summary>
         public KeyValuePair<string, Dictionary<string, int>>[] Statistics;
+
+        /// <summary>Contains names of all data series (statistics) analysed.</summary>
+        public List<string> SeriesNames { get; }
+
+        public AnalysisResult(KeyValuePair<string, Dictionary<string, int>>[] statsCollection)
+        {
+            Statistics = statsCollection;
+
+            SeriesNames = new List<string>();
+            
+            foreach (KeyValuePair<string, Dictionary<string, int>> objKeyValue in Statistics)
+            {
+                // Check data series inside each dictionary with stats
+                foreach (KeyValuePair<string, int> statKeyValue in objKeyValue.Value)
+                {
+                    string statisticName = statKeyValue.Key;
+                    if (!SeriesNames.Contains(statisticName)) { SeriesNames.Add(statisticName); }
+                }
+            }
+        }
     }
 }

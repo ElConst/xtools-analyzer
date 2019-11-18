@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="XToolsAnalyzer.SortingOptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:XToolsAnalyzer"
+             xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:SortingOptionsVM/>
+    </UserControl.DataContext>
+
+    <StackPanel Orientation="Vertical">
+        <TextBlock Style="{StaticResource Header}" Text="Сортировка"/>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="160"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Предмет сравнения"/>
+                <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding SortingKeys}" 
+                      SelectedItem="{Binding SelectedSortKey, Mode=TwoWay}" Margin="4 4 4 0" >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10 0 0 0">
+                <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Направление сортировки"/>
+
+                <DockPanel LastChildFill="False" Margin="0 4 0 0">
+                    <TextBlock Style="{StaticResource NormalText}" Text="По возрастанию"/>
+                    <RadioButton GroupName="SortDirection" IsChecked="{Binding SortAscending, Mode=OneWay}" DockPanel.Dock="Right"/>
+                </DockPanel>
+
+                <DockPanel LastChildFill="False">
+                    <TextBlock Style="{StaticResource NormalText}" Text="По убыванию"/>
+                    <RadioButton GroupName="SortDirection" IsChecked="{Binding SortDescending}" DockPanel.Dock="Right"/>
+                </DockPanel>
+            </StackPanel>
+            
+        </Grid>
+    </StackPanel>
+</UserControl>
