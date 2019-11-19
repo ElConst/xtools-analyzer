@@ -12,6 +12,17 @@
         <Setter Property="FontWeight" Value="Regular"/>
     </Style>
 
+    <Style x:Key="LightHeader" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UltraLightBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <Style x:Key="LightText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UltraLightBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+    </Style>
+
     <Style x:Key="AnalysisElementBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource LightBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>

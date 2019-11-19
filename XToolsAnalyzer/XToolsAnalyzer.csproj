@@ -78,6 +78,9 @@
     <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
     <Compile Include="Model\ToolUsageData.cs" />
+    <Compile Include="OptionsView.xaml.cs">
+      <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
     </Compile>
@@ -86,6 +89,7 @@
     </Compile>
     <Compile Include="ViewModel\AnalysisVM.cs" />
     <Compile Include="ViewModel\FilterVM.cs" />
+    <Compile Include="ViewModel\OptionsVM.cs" />
     <Compile Include="ViewModel\ResultsViewVM.cs" />
     <Compile Include="ViewModel\SortingOptionsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -116,6 +120,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResultsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

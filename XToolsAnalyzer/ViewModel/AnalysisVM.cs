@@ -50,8 +50,8 @@ namespace XToolsAnalyzer.ViewModel
                         SelectedAnalysis = this; 
 
                         // Update view
-                        MainVM.Instance.SelectedGrouping = Analysis.SelectedGrouping;
-                        MainVM.Instance.Groupings = Analysis.Groupings;
+                        OptionsVM.Instance.SelectedGrouping = Analysis.SelectedGrouping;
+                        OptionsVM.Instance.Groupings = Analysis.Groupings;
                         SortingOptionsVM.Instance.CreateOptionsToSortAnAnalysisResult(analysisResult);
                     }
 

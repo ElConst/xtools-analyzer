@@ -130,19 +130,24 @@ namespace XToolsAnalyzer.ViewModel
 
             ChartData data = new ChartData(analysisResult);
 
-            if (data.SeriesList.Count == 1) // Create a normal row series if there's only 1 series to show. 
+            // Create a normal row series if there's only 1 series to show or if a user told not to stack series.
+            if (OptionsVM.Instance.SeparateSeries || data.SeriesList.Count == 1) 
             {
-                var series = data.SeriesList.First();
-
-                SeriesCollection.Add(new RowSeries
+                // Add row series
+                foreach (var series in data.SeriesList)
                 {
-                    Title = series.Name,
-                    Values = new ChartValues<int>(series.Values)
-                }) ;
+                    SeriesCollection.Add(new RowSeries
+                    {
+                        Title = series.Name,
+                        Values = new ChartValues<int>(series.Values)
+                    });
+                }
+
+                ChartHeight = 20 * Labels.Count * data.SeriesList.Count;
             }
             else // Create stacked row series.
             {
-                // Collect info about each statistic for each tool
+                // Add stacked row series
                 foreach (var series in data.SeriesList)
                 {
                     SeriesCollection.Add(new StackedRowSeries
@@ -151,11 +156,11 @@ namespace XToolsAnalyzer.ViewModel
                         Values = new ChartValues<int>(series.Values)
                     });
                 }
+
+                ChartHeight = 20 * Labels.Count;
             }
 
             Labels = new ObservableCollection<string>(data.Labels);
-
-            ChartHeight = 20 * Labels.Count;
         }
 
         public ResultsViewVM()

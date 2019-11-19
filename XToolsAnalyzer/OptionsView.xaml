@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="XToolsAnalyzer.OptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:XToolsAnalyzer"
+             xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="200">
+    <UserControl.DataContext>
+        <vm:OptionsVM/>
+    </UserControl.DataContext>
+
+    <ScrollViewer>
+        <Grid>
+            <StackPanel Orientation="Vertical" Background="{StaticResource DarkBrush}">
+                <Button Style="{StaticResource NormalButton}" FontWeight="Medium" FontSize="12"
+                        Command="{Binding OpenFilterWindowCommand}" Content="Фильтр"
+                        DockPanel.Dock="Right" Margin="5" VerticalAlignment="Top"/>
+                <TextBlock Style="{StaticResource LightHeader}" Text="Группировка"
+                       HorizontalAlignment="Center" Margin="4"/>
+                <StackPanel Orientation="Vertical" Background="{StaticResource LightBrush}">
+                    <TextBlock Style="{StaticResource NormalText}" Text="Группировка"
+                           Margin="4 4 4 0" FontWeight="DemiBold"/>
+                    <ComboBox ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}" Margin="4"
+                                  SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <TextBlock Style="{StaticResource LightHeader}" Text="Сортировка" 
+                           HorizontalAlignment="Center" Margin="4"/>
+                <local:SortingOptionsView DockPanel.Dock="Left" Background="{StaticResource LightBrush}"/>
+
+                <TextBlock Style="{StaticResource LightHeader}" Text="Отображение" 
+                           HorizontalAlignment="Center" Margin="4"/>
+                <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}">
+                    <TextBlock Style="{StaticResource NormalText}" Text="Разделять ряды чарта"
+                           Margin="4"/>
+                    <CheckBox IsChecked="{Binding SeparateSeries, Mode=TwoWay}" DockPanel.Dock="Right"
+                              VerticalAlignment="Center" Margin="0 0 4 0"/>
+                </DockPanel>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

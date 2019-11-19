@@ -17,72 +17,57 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="230"/>
             <ColumnDefinition MinWidth="350"/>
+            <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
         <!--UI to choose an analysis-->
-        <DockPanel>
+        <StackPanel Background="{StaticResource LightBrush}">
             <TextBlock Style="{StaticResource Header}" Text="Типы анализа"
-                   DockPanel.Dock="Top" Margin="4"/>
-            <ScrollViewer>
-                <StackPanel Background="{StaticResource DarkBrush}">
-                    <TextBlock Text="По инструментам" Foreground="{StaticResource UltraLightBrush}"
+                       Margin="4"/>
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Background="{StaticResource DarkBrush}">
+                <TextBlock Text="По инструментам" Foreground="{StaticResource UltraLightBrush}"
                                FontWeight="DemiBold" Margin="4"/>
-                    <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
+                <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                    <TextBlock Text="Опции XTools" Foreground="{StaticResource UltraLightBrush}"
+                <TextBlock Text="Опции XTools" Foreground="{StaticResource UltraLightBrush}"
                                    FontWeight="DemiBold" Margin="4"/>
-                    <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
+                <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
                                     Content="{Binding Path=Name}" Command="{Binding Path=AnalysisCommand}"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
-        </DockPanel>
-
-        <!--Analysis view, in general-->
-        <DockPanel Grid.Column="1">
-            <!--Analysis options-->
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-                <TextBlock Style="{StaticResource Header}" Text="Настройки" Margin="4"/>
-
-                <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Style="{StaticResource Header}" Text="Группировка" 
-                                   DockPanel.Dock="Left" Margin="4 0 4 4"/>
-                        <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}"
-                                  SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="5 0 5 0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-
-                    <local:SortingOptionsView DockPanel.Dock="Left" Margin="5 0 0 5"/>
-
-                    <Button Style="{StaticResource NormalButton}" FontWeight="Medium" FontSize="12"
-                        DockPanel.Dock="Right" Margin="0 5 5 0" VerticalAlignment="Top"
-                        Content="Фильтр" Command="{Binding OpenFilterWindowCommand}"/>
-                </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
+        </ScrollViewer>
 
-            <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
-                       Margin="4" DockPanel.Dock="Top"/>
+        <!--Analyses result-->
+        <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
+                   Grid.Column="1" Margin="4"/>
+        <local:ResultsView Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch"/>
 
-            <!--Analyses result-->
-            <local:ResultsView VerticalAlignment="Stretch"/>
-        </DockPanel>
+            <!--Analysis options-->
+        <StackPanel Background="{StaticResource LightBrush}" Grid.Column="2">
+            <TextBlock Style="{StaticResource Header}" Text="Настройки"
+                       Margin="4"/>
+        </StackPanel>
+        <local:OptionsView Grid.Column="2" Grid.Row="1"/>
+
     </Grid>
 </Window>
