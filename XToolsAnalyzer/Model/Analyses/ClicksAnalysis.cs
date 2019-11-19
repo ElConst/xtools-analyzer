@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace XToolsAnalyzer.Model
 {
@@ -14,12 +13,11 @@ namespace XToolsAnalyzer.Model
             SelectedGrouping = Groupings[0];
         }
 
+        /// <summary>A grouping mode identifier.</summary>
         private static string ToolGrouping = "По инструментам";
 
-        private string[] groupings =
-        {
-            ToolGrouping
-        };
+        private string[] groupings = { ToolGrouping };
+        /// <summary>Data grouping modes available for the analysis.</summary>
         public override string[] Groupings => groupings;
 
         /// <summary>Checks how many times a tool was called within one report.</summary>

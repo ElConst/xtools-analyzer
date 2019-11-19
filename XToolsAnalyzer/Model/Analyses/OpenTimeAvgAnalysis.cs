@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace XToolsAnalyzer.Model
 {
@@ -15,10 +14,11 @@ namespace XToolsAnalyzer.Model
             SelectedGrouping = Groupings[0];
         }
 
-        private static string
-            ToolGrouping = "По инструментам";
+        /// <summary>A grouping mode identifier.</summary>
+        private static string ToolGrouping = "По инструментам";
 
         private string[] groupings = { ToolGrouping };
+        /// <summary>Data grouping modes available for the analysis.</summary>
         public override string[] Groupings => groupings;
 
         /// <summary>Collects tool average open time from a report.</summary>
@@ -30,9 +30,11 @@ namespace XToolsAnalyzer.Model
             // Else get the info
             float avgTimeFromReport = float.Parse(tool.UIStats["OpenTime.Avg"]);
 
+            // If there was no information about open time of this tool before, add a container for it.
             if (!toolsStatInfo.ContainsKey(tool.ToolName)) { toolsStatInfo.Add(tool.ToolName, new ToolAvgStat()); }
             ToolAvgStat toolInfo = toolsStatInfo[tool.ToolName];
 
+            // Add info
             toolInfo.ReportsCount++;
             toolInfo.AvgStat += avgTimeFromReport;
         }

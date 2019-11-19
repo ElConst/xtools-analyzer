@@ -20,6 +20,7 @@
                 <ColumnDefinition Width="160"/>
             </Grid.ColumnDefinitions>
 
+            <!--Sorting key selection-->
             <StackPanel Orientation="Vertical">
                 <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Предмет сравнения"/>
                 <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding SortingKeys}" 
@@ -31,7 +32,8 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </StackPanel>
-            
+
+            <!--Sorting direction selection-->
             <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10 0 0 0">
                 <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Направление сортировки"/>
 

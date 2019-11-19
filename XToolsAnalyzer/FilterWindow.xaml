@@ -17,9 +17,11 @@
     </Window.Resources>
     
     <Grid>
+        <!--Main filter UI-->
         <StackPanel Visibility="{Binding MainUIVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock Style="{StaticResource Header}" Text="Фильтр" Margin="5"/>
 
+            <!--Products filter-->
             <TextBlock Style="{StaticResource NormalText}" Text="По продуктам" 
                        FontWeight="DemiBold" Margin="5 5 0 0"/>
             <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
@@ -34,6 +36,7 @@
                           Background="{StaticResource UltraLightBrush}" Margin="5 5 0 0"/>
             </StackPanel>
 
+            <!--Tools filter-->
             <TextBlock Style="{StaticResource Header}" Text="По инструментам"
                        FontWeight="DemiBold" Margin="5 5 0 0"/>
             <Button Command="{Binding OpenToolsFilterCommand}" Content="Изменить"
@@ -41,6 +44,7 @@
                     HorizontalAlignment="Left" Margin="10 5 0 0"/>
         </StackPanel>
 
+        <!--UI of the tools filter-->
         <DockPanel Visibility="{Binding ToolsSelectUIVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock Style="{StaticResource Header}" Text="Фильтр по инструментам" Margin="5" DockPanel.Dock="Top"/>
 

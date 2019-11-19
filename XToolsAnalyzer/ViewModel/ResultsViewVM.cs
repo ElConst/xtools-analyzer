@@ -80,17 +80,17 @@ namespace XToolsAnalyzer.ViewModel
 
             public ChartData(AnalysisResult analysisResult)
             {
-                var resultStats = analysisResult.Statistics;
+                var resultStats = analysisResult.Data;
 
-                // Get names of objects which were analysed.
-                Labels = resultStats.Select(objKeyValue => objKeyValue.Key).ToArray();
+                // Get names of data groups and place them as labels in the chart.
+                Labels = resultStats.Select(group => group.Name).ToArray();
 
                 List<string> seriesNames = new List<string>();
 
-                // Find out which statistics were analysed (their names will be used for series names).
-                foreach (var objKeyValue in resultStats)
+                // Find out which data series an analysis gave us.
+                foreach (var group in resultStats)
                 {
-                    var objStats = objKeyValue.Value;
+                    var objStats = group.Statistics;
                     foreach (var statKeyValue in objStats)
                     {
                         if (seriesNames.Contains(statKeyValue.Key)) { continue; }
@@ -99,15 +99,15 @@ namespace XToolsAnalyzer.ViewModel
                     }
                 }
 
-                // Collect info about each statistic for each object.
+                // Collect info about each statistic in each group.
                 foreach (var name in seriesNames)
                 {
                     int[] values = new int[Labels.Length];
 
                     int i = 0;
-                    foreach (var objKeyValue in resultStats)
+                    foreach (var group in resultStats)
                     {
-                        var objStats = objKeyValue.Value;
+                        var objStats = group.Statistics;
 
                         values[i] = objStats.ContainsKey(name) ? objStats[name] : 0;
                         i++;

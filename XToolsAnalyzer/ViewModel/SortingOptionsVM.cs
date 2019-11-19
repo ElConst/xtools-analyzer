@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using XToolsAnalyzer.Model;
 
@@ -19,6 +18,7 @@ namespace XToolsAnalyzer.ViewModel
             set => SetProperty(ref sortingKeys, value); // Raises PropertyChanged event to sync with the view.
         }
 
+        /// <summary>Name of a standart sorting key.</summary>
         private const string ObjNameKey = "Название", SeriesSumKey = "Сумма рядов";
 
         private string selectedSortKey = ObjNameKey;
@@ -48,7 +48,6 @@ namespace XToolsAnalyzer.ViewModel
                 AnalysisVM.MakeSelectedAnalysis();
             }
         }
-
         /// <summary>Do sort values ascending or not to do.</summary>
         public bool SortAscending => !SortDescending;
 
@@ -58,31 +57,31 @@ namespace XToolsAnalyzer.ViewModel
         {
             // Note: Opposite sortings (e.g. ascending if descending is selected) are used because of upside down list inside the chart.
 
-            var stats = analysisResult.Statistics;
+            var data = analysisResult.Data;
             
             switch (SelectedSortKey)
             {
                 case ObjNameKey:
-                    // If a sorting by name is selected, just sort by names of analysis objects (which are keys in keyValues)
-                    analysisResult.Statistics = 
-                        (SortDescending ? stats.OrderBy(objKeyValue => objKeyValue.Key) : 
-                                          stats.OrderByDescending(objKeyValue => objKeyValue.Key)).ToArray();
+                    // If a sorting by name is selected, just sort by names of data groups
+                    analysisResult.Data = 
+                        (SortDescending ? data.OrderBy(group => group.Name) :
+                                          data.OrderByDescending(group => group.Name)).ToArray();
                     return;
 
                 case SeriesSumKey:
                     // If a sorting by sum of all series is selected,
-                    // calculate value sums from stats dictionaries (which are values in key-value pairs)
+                    // calculate value sums from stats dictionaries
                     // and sort by these sums
-                    analysisResult.Statistics =
-                        (SortDescending ? stats.OrderBy(objKeyValue => objKeyValue.Value.Sum(stat => stat.Value)) :
-                                          stats.OrderByDescending(objKeyValue => objKeyValue.Value.Sum(stat => stat.Value))).ToArray();
+                    analysisResult.Data =
+                        (SortDescending ? data.OrderBy(group => group.Statistics.Sum(stat => stat.Value)) :
+                                          data.OrderByDescending(group => group.Statistics.Sum(stat => stat.Value))).ToArray();
                     break;
 
                 default:
                     // Else assume that sorting keys are values of a series named SelectedSortKey and sort by those values
-                    analysisResult.Statistics =
-                        (SortDescending ? stats.OrderBy(objKeyValue => objKeyValue.Value.ContainsKey(SelectedSortKey) ? objKeyValue.Value[SelectedSortKey] : 0) :
-                                          stats.OrderByDescending(objKeyValue => objKeyValue.Value.ContainsKey(SelectedSortKey) ? objKeyValue.Value[SelectedSortKey] : 0)).ToArray();
+                    analysisResult.Data =
+                        (SortDescending ? data.OrderBy(group => group.Statistics.ContainsKey(SelectedSortKey) ? group.Statistics[SelectedSortKey] : 0) :
+                                          data.OrderByDescending(group => group.Statistics.ContainsKey(SelectedSortKey) ? group.Statistics[SelectedSortKey] : 0)).ToArray();
                     break;
             }
         }

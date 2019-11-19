@@ -14,45 +14,39 @@ namespace XToolsAnalyzer.Model
             SelectedGrouping = Groupings[0];
         }
 
+        /// <summary>A grouping mode identifier.</summary>
         private static string
             ToolGrouping = "По инструментам",
             VersionGrouping = "По версиям";
 
         private string[] groupings = { ToolGrouping, VersionGrouping };
+        /// <summary>Data grouping modes available for the analysis.</summary>
         public override string[] Groupings => groupings;
 
-        public enum Data { Input, Output }
+        /// <summary>Defines if the analysis will take data from the input of tools. Otherwise it will do it from the output.</summary>
+        public bool AnalyseInputData;
 
-        public Data DataAnalysed;
-
-        /// <summary>Gets amount of times objects of different types used by a tool within a report.</summary>
+        /// <summary>Gets amount of times objects of different types were used by a tool within a report.</summary>
         protected override void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool)
         {
+            // Go through all statisticts of the tool
             foreach (var stat in tool.ExecutorStats)
             {
                 // Make regex match in the statistic name to find out if the statistic is what we are looking for.
-                Match dataTypeMatch = Regex.Match(stat.Key, $@"(?<=({(DataAnalysed == Data.Input ? "Input" : "Output")}Data\.Type\.)).*");
+                Match dataTypeMatch = Regex.Match(stat.Key, $@"(?<=({(AnalyseInputData ? "Input" : "Output")}Data\.Type\.)).*");
 
                 if (!dataTypeMatch.Success) { continue; } // Skip if it's not about data types.
                 string dataType = dataTypeMatch.Value; // Else get the type name.
 
                 string objKey = SelectedGrouping == ToolGrouping ? tool.ToolName : report.ProductVersion;
 
-                if (!stats.ContainsKey(objKey))
-                {
-                    // If there was no information about this object of analysis before, add a container for it.
-                    stats.Add(objKey, new Dictionary<string, int>());
-                }
-                if (!stats[objKey].ContainsKey(dataType))
-                {
-                    // Also add a container for the info about the type
-                    stats[objKey].Add(dataType, int.Parse(stat.Value));
-                }
-                else
-                {
-                    // If there already is a container, just sum old and new values.
-                    stats[objKey][dataType] += int.Parse(stat.Value);
-                }
+                // If there was no information about this object of analysis before, add a container for it.
+                if (!stats.ContainsKey(objKey)) { stats.Add(objKey, new Dictionary<string, int>()); }
+
+                // Also add a container for the info about the type and place the new information here
+                if (!stats[objKey].ContainsKey(dataType)) { stats[objKey].Add(dataType, int.Parse(stat.Value)); }
+                // If there already is a container, just sum old and new values.
+                else { stats[objKey][dataType] += int.Parse(stat.Value); }
             }
         }
 
@@ -62,7 +56,7 @@ namespace XToolsAnalyzer.Model
             public InputDataTypeAnalysis()
             {
                 Name = "Тип входных данных";
-                DataAnalysed = Data.Input;
+                AnalyseInputData = true;
             }
         }
 
@@ -72,7 +66,7 @@ namespace XToolsAnalyzer.Model
             public OutputDataTypeAnalysis()
             {
                 Name = "Тип выходных данных";
-                DataAnalysed = Data.Output;
+                AnalyseInputData = false;
             }
         }
     }

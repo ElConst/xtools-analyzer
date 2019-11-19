@@ -19,6 +19,7 @@
             <ColumnDefinition MinWidth="350"/>
         </Grid.ColumnDefinitions>
 
+        <!--UI to choose an analysis-->
         <DockPanel>
             <TextBlock Style="{StaticResource Header}" Text="Типы анализа"
                    DockPanel.Dock="Top" Margin="4"/>
@@ -49,16 +50,16 @@
             </ScrollViewer>
         </DockPanel>
 
+        <!--Analysis view, in general-->
         <DockPanel Grid.Column="1">
+            <!--Analysis options-->
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                 <TextBlock Style="{StaticResource Header}" Text="Настройки" Margin="4"/>
 
                 <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}">
-                    <local:SortingOptionsView DockPanel.Dock="Left" Margin="5 0 0 5"/>
-
                     <StackPanel Orientation="Vertical">
                         <TextBlock Style="{StaticResource Header}" Text="Группировка" 
-                                   DockPanel.Dock="Left" Margin="4"/>
+                                   DockPanel.Dock="Left" Margin="4 0 4 4"/>
                         <ComboBox DockPanel.Dock="Left" ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}"
                                   SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="5 0 5 0">
                             <ComboBox.ItemTemplate>
@@ -69,6 +70,8 @@
                         </ComboBox>
                     </StackPanel>
 
+                    <local:SortingOptionsView DockPanel.Dock="Left" Margin="5 0 0 5"/>
+
                     <Button Style="{StaticResource NormalButton}" FontWeight="Medium" FontSize="12"
                         DockPanel.Dock="Right" Margin="0 5 5 0" VerticalAlignment="Top"
                         Content="Фильтр" Command="{Binding OpenFilterWindowCommand}"/>
@@ -77,7 +80,8 @@
 
             <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
                        Margin="4" DockPanel.Dock="Top"/>
-            
+
+            <!--Analyses result-->
             <local:ResultsView VerticalAlignment="Stretch"/>
         </DockPanel>
     </Grid>

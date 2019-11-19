@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace XToolsAnalyzer.Model
 {
-    /// <summary>Parent for analyses which count some statistic's average number.</summary>
+    /// <summary>Parent for analyses which count an average number of some statistic.</summary>
     public abstract class AvgAnalysis : Analysis
     {
         /// <summary>Russian name for the statistic analysed.</summary>
@@ -19,9 +18,10 @@ namespace XToolsAnalyzer.Model
         /// <summary>Does the analysis and returns a result.</summary>
         public override AnalysisResult GetAnalysisResult()
         {
+            // Here we will store preliminary data to be converted in a normal collection of statistics later
             Dictionary<string, ToolAvgStat> toolsStatInfo = new Dictionary<string, ToolAvgStat>();
 
-            // Collect data
+            // Go through all tools in all reports and collect statistics sum
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
                 foreach (ToolUsageData tool in report.ToolsUsed)
@@ -30,7 +30,7 @@ namespace XToolsAnalyzer.Model
                 }
             }
 
-            // A collection where to put the analysis results
+            // A collection where to put the statistics
             Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (var toolKeyValue in toolsStatInfo)
@@ -38,12 +38,13 @@ namespace XToolsAnalyzer.Model
                 // Finally calculate the average number.
                 toolKeyValue.Value.AvgStat /= toolKeyValue.Value.ReportsCount;
 
-                // Add this new value to the result
+                // Add this new value to the resulting collection
                 stats.Add(toolKeyValue.Key, new Dictionary<string, int>());
                 stats[toolKeyValue.Key][StatisticName] = (int)toolKeyValue.Value.AvgStat;
             }
 
-            AnalysisResult result = new AnalysisResult(stats.ToArray());
+            // Place the resulting dictionary inside an AnalysisResult (here it gets converted into a more convenient way of data presentation)
+            AnalysisResult result = new AnalysisResult(stats);
 
             return result;
         }

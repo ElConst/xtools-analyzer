@@ -19,6 +19,7 @@ namespace XToolsAnalyzer.Model
             LoadTools();
         }
 
+        /// <summary>Gets all tools names and creates the ToolsFilter.</summary>
         private void LoadTools()
         {
             ToolsFilter = new Dictionary<string, bool>();

@@ -3,6 +3,7 @@ using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
+    /// <summary>Viewmodel containing logic for the 'FilterWindow' and representing the filter for the view.</summary>
     public class FilterVM : ViewModelBase 
     {
         private bool mainUIVisibility = true;
