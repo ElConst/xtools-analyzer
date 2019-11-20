@@ -21,7 +21,7 @@ namespace XToolsAnalyzer.Model
         public override string[] Groupings => groupings;
 
         /// <summary>Checks how many times a tool was called within one report.</summary>
-        protected override void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool)
+        protected override void ProcessToolUsageData(StatisticsReport report, ToolUsageData tool)
         {
             // Skip if there's no information about tool calls
             if (!tool.CommandStats.ContainsKey("Click")) { return; }

@@ -5,42 +5,46 @@ namespace XToolsAnalyzer.Model
     /// <summary>Parent for analyses which count an average number of some statistic.</summary>
     public abstract class AvgAnalysis : Analysis
     {
-        /// <summary>Russian name for the statistic analysed.</summary>
-        public string StatisticName;
+        /// <summary>Russian name of the statistic whose average we are looking for.</summary>
+        public string AverageStatisticName;
 
-        /// <summary>Contains statistic sum and count of reports where the statistic was collected.</summary>
-        protected class ToolAvgStat
+        /// <summary>Collects info needed to calculate an average number of some statistic.</summary>
+        protected class StatAverageInfo
         {
-            public float AvgStat;
+            public float StatSum;
             public int ReportsCount;
         }
+
+        /// <summary>A special temporary storage to put sum of the statistics and count reports to calculate average numbers later.</summary>
+        protected Dictionary<string, StatAverageInfo> statsAverageData;
 
         /// <summary>Does the analysis and returns a result.</summary>
         public override AnalysisResult GetAnalysisResult()
         {
-            // Here we will store preliminary data to be converted in a normal collection of statistics later
-            Dictionary<string, ToolAvgStat> toolsStatInfo = new Dictionary<string, ToolAvgStat>();
+            // Free temporary storages
+            stats = new Dictionary<string, Dictionary<string, int>>();
+            statsAverageData = new Dictionary<string, StatAverageInfo>();
 
             // Go through all tools in all reports and collect statistics sum
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
                 foreach (ToolUsageData tool in report.ToolsUsed)
                 {
-                    ProcessToolUsageData(ref toolsStatInfo, report, tool);
+                    ProcessToolUsageData(report, tool);
                 }
             }
 
-            // A collection where to put the statistics
-            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
-
-            foreach (var toolKeyValue in toolsStatInfo)
+            // Finally calculate average numbers and put them into a storage.
+            foreach (var dataGroupKeyValue in statsAverageData)
             {
-                // Finally calculate the average number.
-                toolKeyValue.Value.AvgStat /= toolKeyValue.Value.ReportsCount;
+                string dataGroupName = dataGroupKeyValue.Key;
+                StatAverageInfo infoToCountAverage = dataGroupKeyValue.Value;
+
+                float statisticAverage = infoToCountAverage.StatSum / infoToCountAverage.ReportsCount;
 
                 // Add this new value to the resulting collection
-                stats.Add(toolKeyValue.Key, new Dictionary<string, int>());
-                stats[toolKeyValue.Key][StatisticName] = (int)toolKeyValue.Value.AvgStat;
+                stats.Add(dataGroupName, new Dictionary<string, int>());
+                stats[dataGroupName][AverageStatisticName] = (int)statisticAverage;
             }
 
             // Place the resulting dictionary inside an AnalysisResult (here it gets converted into a more convenient way of data presentation)
@@ -48,11 +52,5 @@ namespace XToolsAnalyzer.Model
 
             return result;
         }
-
-        /// <summary>Collect some statistics in single ToolUsageData.</summary>
-        protected abstract void ProcessToolUsageData(ref Dictionary<string, ToolAvgStat> toolsStatInfo, StatisticsReport report, ToolUsageData tool);
-
-        // Actually this function is a duct tape just to implement parent's functionality.
-        protected override void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool) { }
     }
 }

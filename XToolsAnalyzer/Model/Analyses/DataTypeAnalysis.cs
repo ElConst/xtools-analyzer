@@ -27,7 +27,7 @@ namespace XToolsAnalyzer.Model
         public bool AnalyseInputData;
 
         /// <summary>Gets amount of times objects of different types were used by a tool within a report.</summary>
-        protected override void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool)
+        protected override void ProcessToolUsageData(StatisticsReport report, ToolUsageData tool)
         {
             // Go through all statisticts of the tool
             foreach (var stat in tool.ExecutorStats)

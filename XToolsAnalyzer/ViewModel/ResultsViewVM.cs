@@ -130,6 +130,8 @@ namespace XToolsAnalyzer.ViewModel
 
             ChartData data = new ChartData(analysisResult);
 
+            Labels = new ObservableCollection<string>(data.Labels);
+
             // Create a normal row series if there's only 1 series to show or if a user told not to stack series.
             if (OptionsVM.Instance.SeparateSeries || data.SeriesList.Count == 1) 
             {
@@ -159,8 +161,6 @@ namespace XToolsAnalyzer.ViewModel
 
                 ChartHeight = 20 * Labels.Count;
             }
-
-            Labels = new ObservableCollection<string>(data.Labels);
         }
 
         public ResultsViewVM()

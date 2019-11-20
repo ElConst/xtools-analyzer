@@ -27,17 +27,21 @@ namespace XToolsAnalyzer.Model
         /// <summary>Grouping mode selected for this analysis at the moment.</summary>
         public string SelectedGrouping;
 
+        /// <summary>A temporary storage for data being collected during the analysis.</summary>
+        protected Dictionary<string, Dictionary<string, int>> stats;
+
         /// <summary>Does the analysis and returns a result.</summary>
         public virtual AnalysisResult GetAnalysisResult()
         {
-            Dictionary<string, Dictionary<string, int>> stats = new Dictionary<string, Dictionary<string, int>>();
+            // Free the temporary storage
+            stats = new Dictionary<string, Dictionary<string, int>>();
 
             // Go through all tools in all reports and collect statistics
             foreach (StatisticsReport report in DataLoader.LoadFromFolder())
             {
                 foreach (ToolUsageData tool in report.ToolsUsed)
                 {
-                    ProcessToolUsageData(ref stats, report, tool);
+                    ProcessToolUsageData(report, tool);
                 }
             }
 
@@ -48,7 +52,7 @@ namespace XToolsAnalyzer.Model
         }
 
         /// <summary>Collects something in single ToolUsageData (depends on the info a concrete analysis needs).</summary>
-        protected abstract void ProcessToolUsageData(ref Dictionary<string, Dictionary<string, int>> stats, StatisticsReport report, ToolUsageData tool);
+        protected abstract void ProcessToolUsageData(StatisticsReport report, ToolUsageData tool);
     }
 
     /// <summary>Class containing results of an analysis.</summary>

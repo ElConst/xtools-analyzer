@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace XToolsAnalyzer.Model
 {
@@ -10,7 +8,7 @@ namespace XToolsAnalyzer.Model
         {
             Type = AnalysisType.ToolsStats;
             Name = "Кол-во объектов на входе (ср.)";
-            StatisticName = "Среднее кол-во объектов на входе";
+            AverageStatisticName = "Среднее кол-во объектов на входе";
             
             SelectedGrouping = Groupings[0];
         }
@@ -23,7 +21,7 @@ namespace XToolsAnalyzer.Model
         public override string[] Groupings => groupings;
 
         /// <summary>Collects info about amounts of data on the input of a tool for one report.</summary>
-        protected override void ProcessToolUsageData(ref Dictionary<string, ToolAvgStat> toolsStatInfo, StatisticsReport report, ToolUsageData tool)
+        protected override void ProcessToolUsageData(StatisticsReport report, ToolUsageData tool)
         {
             int objAmountFromReport = 0;
 
@@ -41,12 +39,12 @@ namespace XToolsAnalyzer.Model
             if (objAmountFromReport == 0) { return; }
 
             // If there was no information about input of this tool before, add a container for it.
-            if (!toolsStatInfo.ContainsKey(tool.ToolName)) { toolsStatInfo.Add(tool.ToolName, new ToolAvgStat()); }
-            ToolAvgStat toolInfo = toolsStatInfo[tool.ToolName];
+            if (!statsAverageData.ContainsKey(tool.ToolName)) { statsAverageData.Add(tool.ToolName, new StatAverageInfo()); }
+            StatAverageInfo averageInfo = statsAverageData[tool.ToolName];
 
             // Add info
-            toolInfo.ReportsCount++;
-            toolInfo.AvgStat += objAmountFromReport;
+            averageInfo.StatSum += objAmountFromReport;
+            averageInfo.ReportsCount++;
         }
     }
 }
