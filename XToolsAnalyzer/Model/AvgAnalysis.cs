@@ -42,8 +42,8 @@ namespace XToolsAnalyzer.Model
 
                 float statisticAverage = infoToCountAverage.StatSum / infoToCountAverage.ReportsCount;
 
+                if (!stats.ContainsKey(dataGroupName)) { stats.Add(dataGroupName, new Dictionary<string, int>()); }
                 // Add this new value to the resulting collection
-                stats.Add(dataGroupName, new Dictionary<string, int>());
                 stats[dataGroupName][AverageStatisticName] = (int)statisticAverage;
             }
 

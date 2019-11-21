@@ -22,7 +22,7 @@
 
         <ScrollViewer Visibility="{Binding ChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
             <lvc:CartesianChart Series="{Binding SeriesCollection}" Height="{Binding ChartHeight}"  Margin="0 10 0 0"
-                            Zoom="X" DisableAnimations="True" LegendLocation="None" VerticalAlignment="Top">
+                            Zoom="X" DisableAnimations="True" LegendLocation="None">
                 <lvc:CartesianChart.DataTooltip>
                     <lvc:DefaultTooltip SelectionMode="SharedYValues"></lvc:DefaultTooltip>
                 </lvc:CartesianChart.DataTooltip>
@@ -30,7 +30,7 @@
                     <lvc:Axis Margin="0 10" Position="RightTop" RangeChangedCommand="{Binding XAxisRangeChangedCommand}" Foreground="{StaticResource DarkBrush}"/>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="XTools" Labels="{Binding Labels}" Foreground="{StaticResource UltraDarkBrush}">
+                    <lvc:Axis Labels="{Binding Labels}" Foreground="{StaticResource UltraDarkBrush}">
                         <lvc:Axis.Separator>
                             <lvc:Separator Step="1"/>
                         </lvc:Axis.Separator>

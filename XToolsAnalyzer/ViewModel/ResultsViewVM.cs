@@ -141,7 +141,8 @@ namespace XToolsAnalyzer.ViewModel
                     SeriesCollection.Add(new RowSeries
                     {
                         Title = series.Name,
-                        Values = new ChartValues<int>(series.Values)
+                        Values = new ChartValues<int>(series.Values),
+                        MaxRowHeigth = 15                        
                     });
                 }
 

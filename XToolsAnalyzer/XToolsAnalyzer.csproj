@@ -73,7 +73,7 @@
     <Compile Include="Model\Analyses\DataTypeAnalysis.cs" />
     <Compile Include="Model\AvgAnalysis.cs" />
     <Compile Include="Model\Filter.cs" />
-    <Compile Include="Model\Analyses\InputAvgAmountAnalysis.cs" />
+    <Compile Include="Model\Analyses\InputAmountAnalysis.cs" />
     <Compile Include="Model\Analyses\OpenTimeAvgAnalysis.cs" />
     <Compile Include="Model\ReflectiveEnumerator.cs" />
     <Compile Include="Model\StatisticsReport.cs" />
