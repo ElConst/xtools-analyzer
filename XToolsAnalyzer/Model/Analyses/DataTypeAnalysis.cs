@@ -24,7 +24,7 @@ namespace XToolsAnalyzer.Model
         public override string[] Groupings => groupings;
 
         /// <summary>Defines if the analysis will take data from the input of tools. Otherwise it will do it from the output.</summary>
-        public bool AnalyseInputData;
+        public bool DoesAnalyseInput;
 
         /// <summary>Gets amount of times objects of different types were used by a tool within a report.</summary>
         protected override void ProcessToolUsageData(StatisticsReport report, ToolUsageData tool)
@@ -33,7 +33,7 @@ namespace XToolsAnalyzer.Model
             foreach (var stat in tool.ExecutorStats)
             {
                 // Make regex match in the statistic name to find out if the statistic is what we are looking for.
-                Match dataTypeMatch = Regex.Match(stat.Key, $@"(?<=({(AnalyseInputData ? "Input" : "Output")}Data\.Type\.)).*");
+                Match dataTypeMatch = Regex.Match(stat.Key, $@"(?<=({(DoesAnalyseInput ? "Input" : "Output")}Data\.Type\.)).*");
 
                 if (!dataTypeMatch.Success) { continue; } // Skip if it's not about data types.
                 string dataType = dataTypeMatch.Value; // Else get the type name.
@@ -56,7 +56,7 @@ namespace XToolsAnalyzer.Model
             public InputDataTypeAnalysis()
             {
                 Name = "Тип входных данных";
-                AnalyseInputData = true;
+                DoesAnalyseInput = true;
             }
         }
 
@@ -66,7 +66,7 @@ namespace XToolsAnalyzer.Model
             public OutputDataTypeAnalysis()
             {
                 Name = "Тип выходных данных";
-                AnalyseInputData = false;
+                DoesAnalyseInput = false;
             }
         }
     }

@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:XToolsAnalyzer.ViewModel"
         mc:Ignorable="d"
         Title="Фильтр" Height="600" Width="400"
-        Background="{StaticResource MediumBrush}">
+        Background="{StaticResource LightBrush}">
     <Window.DataContext>
         <vm:FilterVM/>
     </Window.DataContext>
@@ -23,31 +23,50 @@
 
             <!--Products filter-->
             <TextBlock Style="{StaticResource NormalText}" Text="По продуктам" 
-                       FontWeight="DemiBold" Margin="5 5 0 0"/>
+                       FontWeight="DemiBold" Margin="5"/>
             <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
                 <TextBlock Style="{StaticResource NormalText}" Text="XTools AGP"
-                           Margin="5 5 0 0"/>
+                           Margin="5 0 0 0"/>
                 <CheckBox IsChecked="{Binding XToolsAgpSelected}"
-                          Background="{StaticResource UltraLightBrush}" Margin="5 5 0 0"/>
+                          Background="{StaticResource UltraLightBrush}" Margin="5 0 0 0"/>
 
                 <TextBlock Style="{StaticResource NormalText}" Text="XTools Pro"
-                           Margin="5 5 0 0"/>
+                           Margin="5 0 0 0"/>
                 <CheckBox IsChecked="{Binding XToolsProSelected}"
-                          Background="{StaticResource UltraLightBrush}" Margin="5 5 0 0"/>
+                          Background="{StaticResource UltraLightBrush}" Margin="5 0 0 0"/>
             </StackPanel>
 
+            <!--Date filter-->
+            <TextBlock Style="{StaticResource NormalText}" Text="По дате"
+                       FontWeight="DemiBold" Margin="5"/>
+            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                <TextBlock Style="{StaticResource NormalText}" Text="От"
+                           Margin="5"/>
+                <DatePicker SelectedDate="{Binding StartDate}"/>
+                
+                <TextBlock Style="{StaticResource NormalText}" Text="До"
+                           Margin="5"/>
+                <DatePicker SelectedDate="{Binding EndDate}"/>
+            </StackPanel>
+            <Button Command="{Binding ClearDateFilter}" Content="Сбросить дату"
+                    Style="{StaticResource NormalButton}" Margin="15 5 0 0" HorizontalAlignment="Left"/>
+            
             <!--Tools filter-->
             <TextBlock Style="{StaticResource Header}" Text="По инструментам"
-                       FontWeight="DemiBold" Margin="5 5 0 0"/>
+                       FontWeight="DemiBold" Margin="5"/>
             <Button Command="{Binding OpenToolsFilterCommand}" Content="Изменить"
                     Style="{StaticResource NormalButton}"
-                    HorizontalAlignment="Left" Margin="10 5 0 0"/>
+                    HorizontalAlignment="Left" Margin="15 0 0 0"/>
         </StackPanel>
 
         <!--UI of the tools filter-->
-        <DockPanel Visibility="{Binding ToolsSelectUIVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Style="{StaticResource Header}" Text="Фильтр по инструментам" Margin="5" DockPanel.Dock="Top"/>
-
+        <DockPanel Visibility="{Binding ToolsSelectUIVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   Background="{StaticResource MediumBrush}">
+            <StackPanel DockPanel.Dock="Top" Background="{StaticResource LightBrush}">
+                <TextBlock Style="{StaticResource Header}" Text="Фильтр по инструментам"
+                       Margin="5" DockPanel.Dock="Top"/>
+            </StackPanel>
+            
             <DockPanel LastChildFill="False" DockPanel.Dock="Top">
                 <Button Command="{Binding SelectAllTools}" Content="Выделить все"
                     Style="{StaticResource NormalButton}"
@@ -72,7 +91,7 @@
                 <ItemsControl ItemsSource="{Binding ToolsFilter, Mode=TwoWay}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}" Margin="0 1 0 1">
+                            <DockPanel LastChildFill="False" Background="{StaticResource UltraLightBrush}" Margin="0 1 0 1">
                                 <TextBlock Style="{StaticResource NormalText}" Text="{Binding Path=Name}" Margin="5 0 0 0"/>
                                 <CheckBox IsChecked="{Binding Path=Selected, Mode=TwoWay}" 
                                           DockPanel.Dock="Right" Background="{StaticResource UltraLightBrush}"/>

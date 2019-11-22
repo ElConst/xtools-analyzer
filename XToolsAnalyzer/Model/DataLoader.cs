@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace XToolsAnalyzer.Model
 {
@@ -41,23 +44,44 @@ namespace XToolsAnalyzer.Model
             {
                 if (string.IsNullOrEmpty(json)) { continue; }
 
-                StatisticsReport stats = new StatisticsReport(); // Will contain info from one JSON file
+                StatisticsReport infoFromReport = new StatisticsReport(); // Will contain info from one JSON file
 
                 JObject rootJObj = JObject.Parse(json); // The whole JSON in a JObject
 
+                // Get info about the product where the report came from
                 string productName = rootJObj.GetValue("ProductName")?.ToString();
-                string productVersion = rootJObj.GetValue("ProductVersion")?.ToString() ?? rootJObj.GetValue("Version")?.ToString();
+                string productVersion = (rootJObj.GetValue("ProductVersion") ?? rootJObj.GetValue("Version"))?.ToString();
+
+                // Get info about the period when statistics were collected
+                string startDateStr = (rootJObj.GetValue("StartDate") ?? rootJObj.GetValue("StartDateUtc"))?.ToString();
+                string endDateStr = (rootJObj.GetValue("EndDate") ?? rootJObj.GetValue("EndDateUtc"))?.ToString();
+
+                // Get dates from string
+                DateTime startDate = DateTime.Parse(startDateStr), 
+                         endDate = DateTime.Parse(endDateStr);
 
                 // Skip if the filter tells not to show statistics from this product.
-                if (Filter.Instance != null &&
-                    (productName == "XTools Pro" && !Filter.Instance.ShowXToolsPro ||
-                     productName == "XTools AGP" && !Filter.Instance.ShowXToolsAgp))
+                if (
+                    // Check if the filter have already been set
+                    // Because if not, it's being set at the moment and we don't want to use it unprepared
+                    Filter.Instance != null &&
+                    
+                    // Check if the product of the report doesn't fit the filter
+                    ((productName == "XTools Pro" && !Filter.Instance.ShowXToolsPro ||
+                     productName == "XTools AGP" && !Filter.Instance.ShowXToolsAgp) ||
+
+                     // Check if the date of the statistics collection doesn't fit the filter
+                     (!Filter.Instance.IsDateSuitable(startDate) ||
+                     !Filter.Instance.IsDateSuitable(endDate))))
                 {
                     continue;
                 }
 
-                stats.ProductName = productName;
-                stats.ProductVersion = productVersion;
+                // Place the info from the report into corresponding containers
+                infoFromReport.ProductName = productName;
+                infoFromReport.ProductVersion = productVersion;
+                infoFromReport.StartDate = startDate;
+                infoFromReport.EndDate = endDate;
 
                 // Get list of tools from the value of the "Items" property
                 IEnumerable<JProperty> toolsUsed = rootJObj.GetValue("Items").ToObject<JObject>().Properties();
@@ -98,10 +122,10 @@ namespace XToolsAnalyzer.Model
                         }
                     }
 
-                    stats.ToolsUsed.Add(toolData);
+                    infoFromReport.ToolsUsed.Add(toolData);
                 }
 
-                reports.Add(stats);
+                reports.Add(infoFromReport);
             }
 
             return reports;

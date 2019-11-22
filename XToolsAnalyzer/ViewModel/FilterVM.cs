@@ -1,14 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
     /// <summary>Viewmodel containing logic for the 'FilterWindow' and representing the filter for the view.</summary>
-    public class FilterVM : ViewModelBase 
+    public class FilterVM : ViewModelBase
     {
         private bool mainUIVisibility = true;
         /// <summary>Visibility of the main filter menu.</summary>
-        public bool MainUIVisibility 
+        public bool MainUIVisibility
         {
             get => mainUIVisibility;
             set => SetProperty(ref mainUIVisibility, value); // Raises PropertyChanged event to sync with the view.
@@ -43,6 +44,66 @@ namespace XToolsAnalyzer.ViewModel
 
                 // Make last analysis again with new filter
                 AnalysisVM.MakeSelectedAnalysis();
+            }
+        }
+
+        #endregion
+
+        #region Date
+
+        private DateTime startDate = DateTime.Now;
+        /// <summary>Defines the lower border of suitable report dates.</summary>
+        public DateTime StartDate
+        {
+            get => startDate;
+            set
+            {
+                DateTime valueToSet = value;
+                // Make sure that the start date won't be later than the end date
+                if (DateTime.Compare(valueToSet, EndDate) > 0) { valueToSet = EndDate; }
+
+                SetProperty(ref startDate, valueToSet); // Raises PropertyChanged event to sync with the view.
+                Filter.Instance.StartDate = valueToSet;
+
+                // Make last analysis again with new filter
+                AnalysisVM.MakeSelectedAnalysis();
+            }
+        }
+
+        private DateTime endDate = DateTime.Now;
+        /// <summary>Defines the upper border of suitable report dates.</summary>
+        public DateTime EndDate
+        {
+            get => endDate;
+            set
+            {
+                DateTime valueToSet = value;
+                // Make sure that the end date won't be earlier than the start date
+                if (DateTime.Compare(valueToSet, StartDate) < 0) { valueToSet = StartDate; }
+
+                SetProperty(ref endDate, valueToSet); // Raises PropertyChanged event to sync with the view.
+                Filter.Instance.EndDate = valueToSet;
+
+                // Make last analysis again with new filter
+                AnalysisVM.MakeSelectedAnalysis();
+            }
+        }
+
+        private RelayCommand clearDateFilter;
+        /// <summary>Changes the date filter back to the whole range of dates.</summary>
+        public RelayCommand ClearDateFilter
+        {
+            get
+            {
+                return clearDateFilter ?? // Make sure that the command's backing field was initialized and return it. 
+                (clearDateFilter = new RelayCommand(args => 
+                {
+                    Filter.Instance.ClearDateFilter();
+                    SyncWithModel();
+
+                    // Make last analysis again with new filter
+                    AnalysisVM.MakeSelectedAnalysis();
+                }));            
             }
         }
 
@@ -176,10 +237,19 @@ namespace XToolsAnalyzer.ViewModel
 
         #endregion
 
-        public FilterVM()
+        /// <summary>Synchronize properties of this VM with corresponding properties of the filter model.</summary>
+        private void SyncWithModel()
         {
             XToolsAgpSelected = Filter.Instance.ShowXToolsAgp;
             XToolsProSelected = Filter.Instance.ShowXToolsPro;
+
+            StartDate = Filter.Instance.StartDate;
+            EndDate = Filter.Instance.EndDate;
+        }
+
+        public FilterVM()
+        {
+            SyncWithModel();
         }
     }
 }
