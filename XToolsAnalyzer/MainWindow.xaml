@@ -30,12 +30,13 @@
             <TextBlock Style="{StaticResource Header}" Text="Типы анализа"
                        Margin="4"/>
         </StackPanel>
-        
+
         <ScrollViewer Grid.Row="1">
             <StackPanel Background="{StaticResource DarkBrush}">
-                <TextBlock Text="По инструментам" Foreground="{StaticResource UltraLightBrush}"
-                               FontWeight="DemiBold" Margin="4"/>
-                <ItemsControl Name="ToolsStatsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding ToolsStatsAnalyses}">
+                <TextBlock Text="По инструментам" 
+                           Style="{StaticResource LightSubtitle}" Margin="4"/>
+                <ItemsControl Name="ToolsStatsAnalysesList" ItemsSource="{Binding ToolsStatsAnalyses}"
+                              Grid.Row="1" Background="{StaticResource DarkBrush}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
@@ -44,9 +45,9 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <TextBlock Text="Опции XTools" Foreground="{StaticResource UltraLightBrush}"
-                                   FontWeight="DemiBold" Margin="4"/>
-                <ItemsControl Name="XToolsSettingsAnalysesList" Grid.Row="1" Background="{StaticResource DarkBrush}" ItemsSource="{Binding XToolsSettingsAnalyses}">
+                <TextBlock Text="Опции XTools" Style="{StaticResource LightSubtitle}" Margin="4"/>
+                <ItemsControl Name="XToolsSettingsAnalysesList" ItemsSource="{Binding XToolsSettingsAnalyses}"
+                              Grid.Row="1" Background="{StaticResource DarkBrush}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource NormalButton}" Width="190" Margin="0 2 0 2"
@@ -58,11 +59,14 @@
         </ScrollViewer>
 
         <!--Analyses result-->
-        <TextBlock Style="{StaticResource Header}" Text="{Binding ResultsTitleText}"
-                   Grid.Column="1" Margin="4"/>
+        <StackPanel Background="{StaticResource DarkBrush}" Grid.Column="1">
+            <TextBlock Style="{StaticResource LightHeader}" Text="{Binding ResultsTitleText}"
+                       Margin="4"/>
+        </StackPanel>
+        
         <local:ResultsView Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch"/>
 
-            <!--Analysis options-->
+        <!--Analysis options-->
         <StackPanel Background="{StaticResource LightBrush}" Grid.Column="2">
             <TextBlock Style="{StaticResource Header}" Text="Настройки"
                        Margin="4"/>

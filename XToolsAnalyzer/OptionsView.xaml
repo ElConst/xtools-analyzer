@@ -14,16 +14,19 @@
     <ScrollViewer>
         <Grid>
             <StackPanel Orientation="Vertical" Background="{StaticResource DarkBrush}">
+                <!--Filter-->
                 <Button Style="{StaticResource NormalButton}" FontWeight="Medium" FontSize="12"
                         Command="{Binding OpenFilterWindowCommand}" Content="Фильтр"
                         DockPanel.Dock="Right" Margin="5" VerticalAlignment="Top"/>
-                <TextBlock Style="{StaticResource LightHeader}" Text="Группировка"
+                
+                <!--Data grouping options-->
+                <TextBlock Style="{StaticResource LightSubtitle}" Text="Группировка"
                        HorizontalAlignment="Center" Margin="4"/>
                 <StackPanel Orientation="Vertical" Background="{StaticResource LightBrush}">
-                    <TextBlock Style="{StaticResource NormalText}" Text="Группировка"
-                           Margin="4 4 4 0" FontWeight="DemiBold"/>
-                    <ComboBox ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}" Margin="4"
-                                  SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}">
+                    <TextBlock Style="{StaticResource Subtitle}" Text="Группировка"
+                               Margin="4 4 4 0"/>
+                    <ComboBox ItemsSource="{Binding Groupings}" IsEnabled="{Binding GroupingComboBoxEnabled}" 
+                              SelectedItem="{Binding SelectedGrouping, Mode=TwoWay}" Margin="4">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
@@ -32,18 +35,18 @@
                     </ComboBox>
                 </StackPanel>
 
-                <TextBlock Style="{StaticResource LightHeader}" Text="Сортировка" 
+                <!--Sorting options-->
+                <TextBlock Style="{StaticResource LightSubtitle}" Text="Сортировка" 
                            HorizontalAlignment="Center" Margin="4"/>
                 <local:SortingOptionsView DockPanel.Dock="Left" Background="{StaticResource LightBrush}"/>
 
-                <TextBlock Style="{StaticResource LightHeader}" Text="Отображение" 
+                <!--Chart options-->
+                <TextBlock Style="{StaticResource LightSubtitle}" Text="Отображение" 
                            HorizontalAlignment="Center" Margin="4"/>
-                <DockPanel LastChildFill="False" Background="{StaticResource LightBrush}">
-                    <TextBlock Style="{StaticResource NormalText}" Text="Разделять ряды чарта"
-                           Margin="4"/>
-                    <CheckBox IsChecked="{Binding SeparateSeries, Mode=TwoWay}" DockPanel.Dock="Right"
-                              VerticalAlignment="Center" Margin="0 0 4 0"/>
-                </DockPanel>
+                <StackPanel Background="{StaticResource LightBrush}">
+                    <CheckBox Content="Разделять ряды чарта" IsChecked="{Binding SeparateSeries, Mode=TwoWay}"
+                              Style="{StaticResource CustomCheckBox}" Margin="4"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </ScrollViewer>

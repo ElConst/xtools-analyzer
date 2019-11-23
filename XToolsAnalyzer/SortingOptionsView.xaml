@@ -11,12 +11,13 @@
         <vm:SortingOptionsVM/>
     </UserControl.DataContext>
 
-    <StackPanel Orientation="Vertical" Margin="0 0 0 4">
+    <StackPanel Orientation="Vertical">
         <!--Sorting key selection-->
-        <StackPanel Orientation="Vertical" Margin="3 5 0 0">
-            <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Предмет сравнения"/>
+        <StackPanel Orientation="Vertical" Margin="0 5 0 0">
+            <TextBlock Style="{StaticResource Subtitle}" Text="Предмет сравнения"
+                       Margin="4 0"/>
             <ComboBox ItemsSource="{Binding SortingKeys}" 
-                      SelectedItem="{Binding SelectedSortKey, Mode=TwoWay}" Margin="4 4 4 0" >
+                      SelectedItem="{Binding SelectedSortKey, Mode=TwoWay}" Margin="4">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Style="{StaticResource NormalText}" Text="{Binding}"/>
@@ -26,18 +27,13 @@
         </StackPanel>
 
         <!--Sorting direction selection-->
-        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="3 5 0 0">
-            <TextBlock Style="{StaticResource NormalText}" FontWeight="DemiBold" Text="Направление сортировки"/>
-
-            <DockPanel LastChildFill="False" Margin="0 4 0 0">
-                <TextBlock Style="{StaticResource NormalText}" Text="По возрастанию"/>
-                <RadioButton GroupName="SortDirection" IsChecked="{Binding SortAscending, Mode=OneWay}" DockPanel.Dock="Right"/>
-            </DockPanel>
-
-            <DockPanel LastChildFill="False">
-                <TextBlock Style="{StaticResource NormalText}" Text="По убыванию"/>
-                <RadioButton GroupName="SortDirection" IsChecked="{Binding SortDescending}" DockPanel.Dock="Right"/>
-            </DockPanel>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="4 5 0 0">
+            <TextBlock Style="{StaticResource Subtitle}" Text="Направление сортировки"/>
+            <RadioButton GroupName="SortDirection" IsChecked="{Binding SortAscending, Mode=OneWay}"
+                         Style="{StaticResource CustomRadioButton}" Content="По возрастанию"
+                         Margin="0 4 0 0"/>
+            <RadioButton GroupName="SortDirection" IsChecked="{Binding SortDescending}"
+                         Style="{StaticResource CustomRadioButton}" Content="По убыванию"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

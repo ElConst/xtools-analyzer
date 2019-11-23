@@ -1,20 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:XToolsAnalyzer.Assets">
-    
-    <Color x:Key="UltraLightColor">#D9D0C5</Color>
-    <SolidColorBrush x:Key="UltraLightBrush">#D9D0C5</SolidColorBrush>
-    
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="UltraLightColor">#E6DCD1</Color>
+    <SolidColorBrush x:Key="UltraLightBrush">#E6DCD1</SolidColorBrush>
+
     <Color x:Key="LightColor">#BFB5AA</Color>
     <SolidColorBrush x:Key="LightBrush">#BFB5AA</SolidColorBrush>
-    
-    <Color x:Key="MediumColor">#A69D92</Color>
-    <SolidColorBrush x:Key="MediumBrush">#A69D92</SolidColorBrush>
-    
-    <Color x:Key="DarkColor">#8C837B</Color>
-    <SolidColorBrush x:Key="DarkBrush">#8C837B</SolidColorBrush>
-    
-    <Color x:Key="UltraDarkColor">#59524C</Color>
-    <SolidColorBrush x:Key="UltraDarkBrush">#59524C</SolidColorBrush>
+
+    <Color x:Key="MediumColor">#999187</Color>
+    <SolidColorBrush x:Key="MediumBrush">#999187</SolidColorBrush>
+
+    <Color x:Key="DarkColor">#736B65</Color>
+    <SolidColorBrush x:Key="DarkBrush">#736B65</SolidColorBrush>
+
+    <Color x:Key="UltraDarkColor">#4D4641</Color>
+    <SolidColorBrush x:Key="UltraDarkBrush">#4D4641</SolidColorBrush>
     
 </ResourceDictionary>
