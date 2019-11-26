@@ -8,7 +8,6 @@ namespace XToolsAnalyzer
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainVM();
         }
     }
 }

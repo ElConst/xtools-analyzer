@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace XToolsAnalyzer.Model
 {
@@ -56,23 +55,36 @@ namespace XToolsAnalyzer.Model
                 string startDateStr = (rootJObj.GetValue("StartDate") ?? rootJObj.GetValue("StartDateUtc"))?.ToString();
                 string endDateStr = (rootJObj.GetValue("EndDate") ?? rootJObj.GetValue("EndDateUtc"))?.ToString();
 
-                // Get dates from string
-                DateTime startDate = DateTime.Parse(startDateStr), 
-                         endDate = DateTime.Parse(endDateStr);
+                // Convert dates from string to DateTime
 
-                // Skip if the filter tells not to show statistics from this product.
+                DateTime startDate, endDate;
+
+                // If a string is in an uncommon format, suppose that the format is "dd.mm.yyyy" and parse exactly from it
+                if (!DateTime.TryParse(startDateStr, out startDate))
+                {
+                    startDate = DateTime.ParseExact(startDateStr, "dd.mm.yyyy", CultureInfo.InvariantCulture);
+                }
+                if (!DateTime.TryParse(endDateStr, out endDate))
+                {
+                    endDate = DateTime.ParseExact(endDateStr, "dd.mm.yyyy", CultureInfo.InvariantCulture);
+                }
+
+                // Skip if the filter tells not to show these statistics
                 if (
                     // Check if the filter have already been set
                     // Because if not, it's being set at the moment and we don't want to use it unprepared
-                    Filter.Instance != null &&
+                    Filter.Loaded &&
                     
                     // Check if the product of the report doesn't fit the filter
-                    ((productName == "XTools Pro" && !Filter.Instance.ShowXToolsPro ||
-                     productName == "XTools AGP" && !Filter.Instance.ShowXToolsAgp) ||
+                    ((productName == "XTools Pro" && !Filter.ShowXToolsPro ||
+                     productName == "XTools AGP" && !Filter.ShowXToolsAgp) ||
+
+                    // Check if the product version of the report doesn't fit the filter
+                    (!Filter.VersionsFilter[productVersion]) ||
 
                      // Check if the date of the statistics collection doesn't fit the filter
-                     (!Filter.Instance.IsDateSuitable(startDate) ||
-                     !Filter.Instance.IsDateSuitable(endDate))))
+                     (!Filter.IsDateSuitable(startDate) ||
+                     !Filter.IsDateSuitable(endDate))))
                 {
                     continue;
                 }
@@ -89,7 +101,7 @@ namespace XToolsAnalyzer.Model
                 foreach (var toolJProp in toolsUsed)
                 {
                     // Skip if the filter tells not to show info about the tool.
-                    if (Filter.Instance != null && !Filter.Instance.ToolsFilter[toolJProp.Name]) { continue; }
+                    if (Filter.Loaded && !Filter.ToolsFilter[toolJProp.Name]) { continue; }
 
                     // Will contain statistics for one XTool usage within a period
                     ToolUsageData toolData = new ToolUsageData(toolJProp.Name);

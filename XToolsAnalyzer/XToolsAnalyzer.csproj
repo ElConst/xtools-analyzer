@@ -84,6 +84,9 @@
     <Compile Include="ResultsView.xaml.cs">
       <DependentUpon>ResultsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectiveFilterView.xaml.cs">
+      <DependentUpon>SelectiveFilterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SortingOptionsView.xaml.cs">
       <DependentUpon>SortingOptionsView.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,7 @@
     <Compile Include="ViewModel\FilterVM.cs" />
     <Compile Include="ViewModel\OptionsVM.cs" />
     <Compile Include="ViewModel\ResultsViewVM.cs" />
+    <Compile Include="ViewModel\SelectiveFilterVM.cs" />
     <Compile Include="ViewModel\SortingOptionsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
@@ -125,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectiveFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

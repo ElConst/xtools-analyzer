@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
@@ -25,7 +24,7 @@ namespace XToolsAnalyzer.ViewModel
             set
             {
                 SetProperty(ref xtoolsAgpSelected, value); // Raises PropertyChanged event to sync with the view.
-                Filter.Instance.ShowXToolsAgp = value;
+                Filter.ShowXToolsAgp = value;
 
                 // Make last analysis again with new filter
                 AnalysisVM.MakeSelectedAnalysis();
@@ -40,7 +39,7 @@ namespace XToolsAnalyzer.ViewModel
             set
             {
                 SetProperty(ref xtoolsProSelected, value); // Raises PropertyChanged event to sync with the view.
-                Filter.Instance.ShowXToolsPro = value;
+                Filter.ShowXToolsPro = value;
 
                 // Make last analysis again with new filter
                 AnalysisVM.MakeSelectedAnalysis();
@@ -63,7 +62,7 @@ namespace XToolsAnalyzer.ViewModel
                 if (DateTime.Compare(valueToSet, EndDate) > 0) { valueToSet = EndDate; }
 
                 SetProperty(ref startDate, valueToSet); // Raises PropertyChanged event to sync with the view.
-                Filter.Instance.StartDate = valueToSet;
+                Filter.StartDate = valueToSet;
 
                 // Make last analysis again with new filter
                 AnalysisVM.MakeSelectedAnalysis();
@@ -82,7 +81,7 @@ namespace XToolsAnalyzer.ViewModel
                 if (DateTime.Compare(valueToSet, StartDate) < 0) { valueToSet = StartDate; }
 
                 SetProperty(ref endDate, valueToSet); // Raises PropertyChanged event to sync with the view.
-                Filter.Instance.EndDate = valueToSet;
+                Filter.EndDate = valueToSet;
 
                 // Make last analysis again with new filter
                 AnalysisVM.MakeSelectedAnalysis();
@@ -98,7 +97,7 @@ namespace XToolsAnalyzer.ViewModel
                 return clearDateFilter ?? // Make sure that the command's backing field was initialized and return it. 
                 (clearDateFilter = new RelayCommand(args => 
                 {
-                    Filter.Instance.ClearDateFilter();
+                    Filter.ClearDateFilter();
                     SyncWithModel();
 
                     // Make last analysis again with new filter
@@ -109,146 +108,87 @@ namespace XToolsAnalyzer.ViewModel
 
         #endregion
 
-        #region Tools
+        private bool toolsFilterOpened = false;
 
-        private bool toolsSelectUIVisibility = false;
-        /// <summary>Visibility of the tools selection menu.</summary>
-        public bool ToolsSelectUIVisibility
-        {
-            get => toolsSelectUIVisibility;
-            set => SetProperty(ref toolsSelectUIVisibility, value); // Raises PropertyChanged event to sync with the view.
-        }
-
-        /// <summary>ViewModel that contains name of a tool and tells if it is selected for the tools filter.</summary>
-        public class ToolSelection : ViewModelBase
-        { 
-            public string Name { get; set; }
-
-            private bool selected;
-            public bool Selected 
-            {
-                get => selected;
-                set => SetProperty(ref selected, value); // Raises PropertyChanged event to sync with the view.
-            }
-        }
-
-        private ToolSelection[] toolsFilter;
-        /// <summary>Collection of tool names with bool variables telling if the tool is selected for the filter or not.</summary>
-        public ToolSelection[] ToolsFilter
-        {
-            get => toolsFilter;
-            set => SetProperty(ref toolsFilter, value); // Raises PropertyChanged event to sync with the view.
-        }
-
-        private RelayCommand selectAllTools;
-        /// <summary>Makes all tools selected in the filter.</summary>
-        public RelayCommand SelectAllTools
+        private RelayCommand openToolsFilter;
+        /// <summary>Opens tools filter wrapped in the selective filter view.</summary>
+        public RelayCommand OpenToolsFilter
         {
             get
             {
-                return selectAllTools ?? // Make sure that the command's backing field was initialized and return it. 
-                (selectAllTools = new RelayCommand(args =>
+                return openToolsFilter ?? // Make sure that the command's backing field was initialized and return it. 
+                (openToolsFilter = new RelayCommand(args =>
                 {
-                    foreach (var toolSelection in ToolsFilter)
-                    { 
-                        toolSelection.Selected = true;
-                    }
+                    // Put the tools filter to the selective filter view so it could be modified
+                    SelectiveFilterVM.Instance.SetFilter(Filter.ToolsFilter);
+
+                    SelectiveFilterVM.Instance.Title = "Фильтр по инструментам";
+                    toolsFilterOpened = true;
+
+                    // Hide the main filter, show the selective filter with this tools filter data
+                    SwitchSelectiveFilterVisibility();
                 }));
             }
         }
 
-        private RelayCommand removeToolsSelection;
-        /// <summary>Makes all tools not selected in the filter.</summary>
-        public RelayCommand RemoveToolsSelection
+        private bool versionsFilterOpened = false;
+
+        private RelayCommand openVersionsFilter;
+        /// <summary>Opens product versions filter wrapped in the selective filter view.</summary>
+        public RelayCommand OpenVersionsFilter
         {
             get
             {
-                return removeToolsSelection ?? // Make sure that the command's backing field was initialized and return it. 
-                (removeToolsSelection = new RelayCommand(args =>
+                return openVersionsFilter ?? // Make sure that the command's backing field was initialized and return it. 
+                (openVersionsFilter = new RelayCommand(args =>
                 {
-                    foreach (var toolSelection in ToolsFilter)
-                    {
-                        toolSelection.Selected = false;
-                    }
+                    // Put the versions filter to the selective filter view so it could be modified
+                    SelectiveFilterVM.Instance.SetFilter(Filter.VersionsFilter);
+
+                    SelectiveFilterVM.Instance.Title = "Фильтр по версиям продукта";
+                    versionsFilterOpened = true;
+
+                    // Hide the main filter, show the selective filter with this versions filter data
+                    SwitchSelectiveFilterVisibility();
                 }));
             }
         }
 
-        private RelayCommand openToolsFilterCommand;
-        /// <summary>Open tools filter menu and hide main filter.</summary>
-        public RelayCommand OpenToolsFilterCommand
+        /// <summary>Swaps visibility of the main filter UI and the selective filter UI.</summary>
+        public void SwitchSelectiveFilterVisibility()
         {
-            get
-            {
-                return openToolsFilterCommand ?? // Make sure that the command's backing field was initialized and return it. 
-                (openToolsFilterCommand = new RelayCommand(args =>
-                {
-                    // Get the current tools filter to show it in the view
-                    ToolsFilter = Filter.Instance.ToolsFilter
-                        .Select(keyValue => new ToolSelection() { Name = keyValue.Key, Selected = keyValue.Value })
-                        .OrderBy(t => t.Name).ToArray();
-
-                    SwitchToolsFilterVisibility(); // Hide the main filter, the show tools filter
-                }));
-            }
-        }
-
-        private RelayCommand cancelToolsFilterChanges;
-        /// <summary>Close tools filter menu without saving changes.</summary>
-        // (basically means just to hide it, because the changes will be erased after user opens the tools filter again).
-        public RelayCommand CancelToolsFilterChanges
-        {
-            get
-            {
-                return cancelToolsFilterChanges ?? // Make sure that the command's backing field was initialized and return it. 
-                (cancelToolsFilterChanges = new RelayCommand(args =>
-                {
-                    SwitchToolsFilterVisibility(); // Hide the tools filter, show the main filter
-                }));
-            }
-        }
-
-        private RelayCommand closeToolsFilterCommand;
-        /// <summary>Close tools filter menu and show main filter after saving changes.</summary>
-        public RelayCommand CloseToolsFilterCommand
-        {
-            get
-            {
-                return closeToolsFilterCommand ?? // Make sure that the command's backing field was initialized and return it. 
-                (closeToolsFilterCommand = new RelayCommand(args =>
-                {
-                    // Update the tools filter inside the model
-                    Filter.Instance.ToolsFilter = ToolsFilter.ToDictionary(t => t.Name, t => t.Selected);
-
-                    // Make last analysis again with new filter
-                    AnalysisVM.MakeSelectedAnalysis();
-
-                    SwitchToolsFilterVisibility(); // Hide the tools filter, show the main filter
-                }));
-            }
-        }
-
-        /// <summary>Swaps visibility of the main filter UI and the tools filter UI.</summary>
-        private void SwitchToolsFilterVisibility()
-        {
-            ToolsSelectUIVisibility = MainUIVisibility;
+            SelectiveFilterVM.Instance.Visibility = MainUIVisibility;
             MainUIVisibility = !MainUIVisibility;
+
+            // If the selective filter is being closed, mark as closed all filters which are edited inside it
+            if (!SelectiveFilterVM.Instance.Visibility)
+            {
+                toolsFilterOpened = versionsFilterOpened = false;
+            }
         }
 
-        #endregion
+        /// <summary>Apply changes made in the selective filter view to the filter (from the model) which have been edited.</summary>
+        public void SaveSelectiveFilterChanges()
+        {
+            if (toolsFilterOpened) { Filter.ToolsFilter = SelectiveFilterVM.Instance.GetFilter(); }
+            else if (versionsFilterOpened) { Filter.VersionsFilter = SelectiveFilterVM.Instance.GetFilter(); }
+        }
 
-        /// <summary>Synchronize properties of this VM with corresponding properties of the filter model.</summary>
+        /// <summary>Synchronizes properties of this VM with corresponding properties of the filter model.</summary>
         private void SyncWithModel()
         {
-            XToolsAgpSelected = Filter.Instance.ShowXToolsAgp;
-            XToolsProSelected = Filter.Instance.ShowXToolsPro;
+            XToolsAgpSelected = Filter.ShowXToolsAgp;
+            XToolsProSelected = Filter.ShowXToolsPro;
 
-            StartDate = Filter.Instance.StartDate;
-            EndDate = Filter.Instance.EndDate;
+            StartDate = Filter.StartDate;
+            EndDate = Filter.EndDate;
         }
 
+        public static FilterVM Instance;
         public FilterVM()
         {
+            Instance = this;
+
             SyncWithModel();
         }
     }
