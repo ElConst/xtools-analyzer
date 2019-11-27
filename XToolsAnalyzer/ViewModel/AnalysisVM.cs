@@ -26,6 +26,9 @@ namespace XToolsAnalyzer.ViewModel
             SelectedAnalysis.AnalysisCommand.Execute("");
         }
 
+        /// <summary>The result of the last analysis made by user.</summary>
+        public static AnalysisResult LastAnalysisResult;
+
         /// <summary>Model of the analysis.</summary>
         public readonly Analysis Analysis;
 
@@ -42,6 +45,9 @@ namespace XToolsAnalyzer.ViewModel
                 (analysisCommand = new RelayCommand(obj =>
                 {
                     AnalysisResult analysisResult = Analysis.GetAnalysisResult();
+
+                    // Store the result in case we'll need it again
+                    LastAnalysisResult = analysisResult;
 
                     // If analysis is changed
                     if (SelectedAnalysis != this)

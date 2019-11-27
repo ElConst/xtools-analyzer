@@ -25,9 +25,8 @@ namespace XToolsAnalyzer.ViewModel
         {
             Instance = this;
 
-            // Path to the folder with JSONs required here.
-            DataLoader.DefaultFolderToLoad = @"d:\a";
-
+            // Get data from the folder with JSONs locally
+            DataLoader.LoadFromFolder(@"d:\xtools");
             // Set a primary filter
             Filter.LoadFilters();
 

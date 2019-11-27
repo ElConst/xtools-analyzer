@@ -25,6 +25,10 @@
             <TextBlock Style="{StaticResource Header}" Text="Фильтр" 
                        Margin="5" DockPanel.Dock="Top"/>
 
+            <Button Command="{Binding SaveChanges}" Content="Сохранить изменения"
+                                Style="{StaticResource NormalButton}"
+                                HorizontalAlignment="Right" Margin="4" DockPanel.Dock="Bottom"/>
+            
             <ScrollViewer Background="{StaticResource DarkBrush}">
                 <StackPanel>
                     <!--Products filter-->
@@ -54,12 +58,12 @@
                                        Margin="10 4 2 4"/>
                             <DatePicker SelectedDate="{Binding EndDate}"/>
                         </StackPanel>
-                    
+
                         <Button Command="{Binding ClearDateFilter}" Content="Сбросить дату"
                                 Style="{StaticResource NormalButton}" 
                                 Margin="10 5 0 4" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    
+
                     <!--Tools filter-->
                     <TextBlock Style="{StaticResource LightSubtitle}" Text="По инструментам"
                                Margin="5"/>

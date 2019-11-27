@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using XToolsAnalyzer.Model;
 
 namespace XToolsAnalyzer.ViewModel
 {
@@ -40,24 +41,24 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        private Selectable[] filter;
+        private Selectable[] editedFilter;
         /// <summary>A copy of the given filter to modify in the view.</summary>
-        public Selectable[] Filter
+        public Selectable[] EditedFilter
         {
-            get => filter;
-            set => SetProperty(ref filter, value); // Raises PropertyChanged event to sync with the view.
+            get => editedFilter;
+            set => SetProperty(ref editedFilter, value); // Raises PropertyChanged event to sync with the view.
         }
 
         /// <summary>Puts data from a filter to the view so it could be modified by user.</summary>
-        public void SetFilter(Dictionary<string, bool> filterToModify)
+        public void SetFilter(Dictionary<string, bool> filterToEdit)
         {
-            Filter = filterToModify
+            EditedFilter = filterToEdit
                         .Select(keyValue => new Selectable() { Name = keyValue.Key, Selected = keyValue.Value })
                         .OrderBy(t => t.Name).ToArray();
         }
 
         /// <summary>Converts the contained filter to a dictionary and returns it.</summary>
-        public Dictionary<string, bool> GetFilter() => Filter.ToDictionary(t => t.Name, t => t.Selected);
+        public Dictionary<string, bool> GetFilter() => EditedFilter.ToDictionary(t => t.Name, t => t.Selected);
 
         private RelayCommand selectAll;
         /// <summary>Selects all entries in the filter.</summary>
@@ -68,7 +69,7 @@ namespace XToolsAnalyzer.ViewModel
                 return selectAll ?? // Make sure that the command's backing field was initialized and return it. 
                 (selectAll = new RelayCommand(args =>
                 {
-                    foreach (var entry in Filter) { entry.Selected = true; }
+                    foreach (var entry in EditedFilter) { entry.Selected = true; }
                 }));
             }
         }
@@ -82,7 +83,7 @@ namespace XToolsAnalyzer.ViewModel
                 return clearSelection ?? // Make sure that the command's backing field was initialized and return it. 
                 (clearSelection = new RelayCommand(args =>
                 {
-                    foreach (var entry in Filter) { entry.Selected = false; }
+                    foreach (var entry in EditedFilter) { entry.Selected = false; }
                 }));
             }
         }
@@ -113,9 +114,6 @@ namespace XToolsAnalyzer.ViewModel
                 {
                     // Update modified filter inside the model
                     FilterVM.Instance.SaveSelectiveFilterChanges();
-
-                    // Make last analysis again with new filter
-                    AnalysisVM.MakeSelectedAnalysis();
 
                     // Hide the selective filter view, show the main filter
                     FilterVM.Instance.SwitchSelectiveFilterVisibility();

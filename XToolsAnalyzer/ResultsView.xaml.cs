@@ -1,16 +1,9 @@
-﻿using LiveCharts.Events;
-using LiveCharts.Wpf;
-using System.Windows.Controls;
-using XToolsAnalyzer.ViewModel;
+﻿using System.Windows.Controls;
 
 namespace XToolsAnalyzer
 {
     public partial class ResultsView : UserControl
     {
-        public ResultsView()
-        {
-            InitializeComponent();
-            DataContext = new ResultsViewVM();
-        }
+        public ResultsView() => InitializeComponent();
     }
 }

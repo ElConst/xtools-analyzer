@@ -10,19 +10,12 @@ namespace XToolsAnalyzer.Model
     /// <summary>Handles data load and its primary processing.</summary>
     public static class DataLoader
     {
-        /// <summary>By default if data is being loaded locally from the computer it will be loaded from this folder.</summary>
-        public static string DefaultFolderToLoad { get; set; }
+        /// <summary>A data collection got from JSONs.</summary>
+        public static List<StatisticsReport> Data { get; private set; }
 
-        /// <summary>Collects statistics for each user from JSONs inside the default folder</summary>
-        /// <returns>Statistics collected from JSONs</returns>
-        public static List<StatisticsReport> LoadFromFolder() => LoadFromFolder(DefaultFolderToLoad);
-
-        /// <summary>
-        /// Collects statistics for each user from JSONs inside a folder
-        /// </summary>
-        /// <param name="jsonsRootPath">Path to a folder with JSONs</param>
-        /// <returns>Statistics collected from JSONs</returns>
-        public static List<StatisticsReport> LoadFromFolder(string jsonsRootPath)
+        /// <summary>Collects statistics from JSON reports inside a folder.</summary> 
+        /// <param name="jsonsRootPath">Path to a folder with JSONs.</param>
+        public static void LoadFromFolder(string jsonsRootPath)
         {
             List<string> jsons = new List<string>();
 
@@ -31,7 +24,7 @@ namespace XToolsAnalyzer.Model
             // Read the content of each json into a string
             var jsonsСontent = userJsonFiles.Select(path => File.ReadAllText(path));
 
-            return GetInfoFromJsons(jsonsСontent.ToList());
+            Data = GetInfoFromJsons(jsonsСontent.ToList());
         }
 
         /// <summary>Collects statistics for each user from JSONs given.</summary>
@@ -69,26 +62,6 @@ namespace XToolsAnalyzer.Model
                     endDate = DateTime.ParseExact(endDateStr, "dd.mm.yyyy", CultureInfo.InvariantCulture);
                 }
 
-                // Skip if the filter tells not to show these statistics
-                if (
-                    // Check if the filter have already been set
-                    // Because if not, it's being set at the moment and we don't want to use it unprepared
-                    Filter.Loaded &&
-                    
-                    // Check if the product of the report doesn't fit the filter
-                    ((productName == "XTools Pro" && !Filter.ShowXToolsPro ||
-                     productName == "XTools AGP" && !Filter.ShowXToolsAgp) ||
-
-                    // Check if the product version of the report doesn't fit the filter
-                    (!Filter.VersionsFilter[productVersion]) ||
-
-                     // Check if the date of the statistics collection doesn't fit the filter
-                     (!Filter.IsDateSuitable(startDate) ||
-                     !Filter.IsDateSuitable(endDate))))
-                {
-                    continue;
-                }
-
                 // Place the info from the report into corresponding containers
                 infoFromReport.ProductName = productName;
                 infoFromReport.ProductVersion = productVersion;
@@ -100,9 +73,6 @@ namespace XToolsAnalyzer.Model
                 // Collect statistics from each tool
                 foreach (var toolJProp in toolsUsed)
                 {
-                    // Skip if the filter tells not to show info about the tool.
-                    if (Filter.Loaded && !Filter.ToolsFilter[toolJProp.Name]) { continue; }
-
                     // Will contain statistics for one XTool usage within a period
                     ToolUsageData toolData = new ToolUsageData(toolJProp.Name);
 

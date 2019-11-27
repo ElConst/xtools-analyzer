@@ -45,7 +45,7 @@
         </DockPanel>
 
         <ScrollViewer DockPanel.Dock="Bottom">
-            <ItemsControl ItemsSource="{Binding Filter, Mode=TwoWay}" >
+            <ItemsControl ItemsSource="{Binding EditedFilter, Mode=TwoWay}" >
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <DockPanel Background="{StaticResource LightBrush}" Margin="0 1 0 1">

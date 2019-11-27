@@ -65,7 +65,7 @@
             {
                 SetProperty(ref separateSeries, value); // Raises PropertyChanged event to sync with the view.
 
-                AnalysisVM.MakeSelectedAnalysis();
+                ResultsViewVM.Instance.RecreateLastChart();
             }
         }
     }

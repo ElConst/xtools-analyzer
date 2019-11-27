@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using XToolsAnalyzer.ViewModel;
 
 namespace XToolsAnalyzer
 {
@@ -7,19 +6,13 @@ namespace XToolsAnalyzer
     {
         private static FilterWindow instance;
         /// <summary>The only instance of the window.</summary>
-        public static FilterWindow Instance
-        {
-            get
-            {
-                if (instance == null || !instance.IsLoaded) { instance = new FilterWindow(); }
-                return instance;
-            }
-        }
+        public static FilterWindow Instance => instance ?? (instance = new FilterWindow());
 
         public FilterWindow()
         {
             InitializeComponent();
-            DataContext = new FilterVM();
+
+            Closed += (object sender, System.EventArgs e) => { instance = null; };
         }
     }
 }

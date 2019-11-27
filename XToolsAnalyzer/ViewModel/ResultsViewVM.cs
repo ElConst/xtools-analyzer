@@ -118,6 +118,14 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
+        /// <summary>Creates a new chart with old data.</summary>
+        public void RecreateLastChart()
+        {
+            if (AnalysisVM.LastAnalysisResult == null) { return; }
+            
+            CreateRowChart(AnalysisVM.LastAnalysisResult);
+        }
+
         /// <summary>Replaces chart series with new row series.</summary>
         /// <param name="analysisResult">A data class object where the information will be taken from</param>
         public void CreateRowChart(AnalysisResult analysisResult)

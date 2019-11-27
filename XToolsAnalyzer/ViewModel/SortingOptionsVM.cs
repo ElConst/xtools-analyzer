@@ -30,8 +30,8 @@ namespace XToolsAnalyzer.ViewModel
             {
                 SetProperty(ref selectedSortKey, value); // Raises PropertyChanged event to sync with the view.
 
-                // Make last analysis again with new options
-                AnalysisVM.MakeSelectedAnalysis();
+                Sort(ref AnalysisVM.LastAnalysisResult);
+                ResultsViewVM.Instance.RecreateLastChart();
             }
         }
 
@@ -44,8 +44,8 @@ namespace XToolsAnalyzer.ViewModel
             { 
                 SetProperty(ref sortDescending, value); // Raises PropertyChanged event to sync with the view.
 
-                // Make last analysis again with new options
-                AnalysisVM.MakeSelectedAnalysis();
+                Sort(ref AnalysisVM.LastAnalysisResult);
+                ResultsViewVM.Instance.RecreateLastChart();
             }
         }
         /// <summary>Do sort values ascending or not to do.</summary>
@@ -57,7 +57,8 @@ namespace XToolsAnalyzer.ViewModel
         {
             // Note: Opposite sortings (e.g. ascending if descending is selected) are used because of upside down list inside the chart.
 
-            var data = analysisResult.Data;
+            var data = analysisResult?.Data;
+            if (data == null) { return; }
             
             switch (SelectedSortKey)
             {

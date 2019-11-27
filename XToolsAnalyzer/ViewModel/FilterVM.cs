@@ -25,9 +25,6 @@ namespace XToolsAnalyzer.ViewModel
             {
                 SetProperty(ref xtoolsAgpSelected, value); // Raises PropertyChanged event to sync with the view.
                 Filter.ShowXToolsAgp = value;
-
-                // Make last analysis again with new filter
-                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
@@ -40,9 +37,6 @@ namespace XToolsAnalyzer.ViewModel
             {
                 SetProperty(ref xtoolsProSelected, value); // Raises PropertyChanged event to sync with the view.
                 Filter.ShowXToolsPro = value;
-
-                // Make last analysis again with new filter
-                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
@@ -63,9 +57,6 @@ namespace XToolsAnalyzer.ViewModel
 
                 SetProperty(ref startDate, valueToSet); // Raises PropertyChanged event to sync with the view.
                 Filter.StartDate = valueToSet;
-
-                // Make last analysis again with new filter
-                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
@@ -82,9 +73,6 @@ namespace XToolsAnalyzer.ViewModel
 
                 SetProperty(ref endDate, valueToSet); // Raises PropertyChanged event to sync with the view.
                 Filter.EndDate = valueToSet;
-
-                // Make last analysis again with new filter
-                AnalysisVM.MakeSelectedAnalysis();
             }
         }
 
@@ -99,9 +87,6 @@ namespace XToolsAnalyzer.ViewModel
                 {
                     Filter.ClearDateFilter();
                     SyncWithModel();
-
-                    // Make last analysis again with new filter
-                    AnalysisVM.MakeSelectedAnalysis();
                 }));            
             }
         }
@@ -167,11 +152,26 @@ namespace XToolsAnalyzer.ViewModel
             }
         }
 
-        /// <summary>Apply changes made in the selective filter view to the filter (from the model) which have been edited.</summary>
+        /// <summary>Applies changes made in the selective filter view to the filter (from the model) which have been edited.</summary>
         public void SaveSelectiveFilterChanges()
         {
             if (toolsFilterOpened) { Filter.ToolsFilter = SelectiveFilterVM.Instance.GetFilter(); }
             else if (versionsFilterOpened) { Filter.VersionsFilter = SelectiveFilterVM.Instance.GetFilter(); }
+        }
+
+        private RelayCommand saveChanges;
+        /// <summary>Applies changes made to the filter model and refilters data.</summary>
+        public RelayCommand SaveChanges
+        {
+            get
+            {
+                return saveChanges ?? // Make sure that the command's backing field was initialized and return it. 
+                (saveChanges = new RelayCommand(args =>
+                {
+                    Filter.FilterData();
+                    AnalysisVM.MakeSelectedAnalysis();
+                }));
+            }
         }
 
         /// <summary>Synchronizes properties of this VM with corresponding properties of the filter model.</summary>

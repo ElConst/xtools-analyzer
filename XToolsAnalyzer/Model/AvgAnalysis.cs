@@ -2,7 +2,7 @@
 
 namespace XToolsAnalyzer.Model
 {
-    /// <summary>Parent for analyses which count an average number of some statistic.</summary>
+    /// <summary>Parent for analyses which count an average of some statistic.</summary>
     public abstract class AvgAnalysis : Analysis
     {
         /// <summary>Russian name of the statistic whose average we are looking for.</summary>
@@ -26,7 +26,7 @@ namespace XToolsAnalyzer.Model
             statsAverageData = new Dictionary<string, StatAverageInfo>();
 
             // Go through all tools in all reports and collect statistics sum
-            foreach (StatisticsReport report in DataLoader.LoadFromFolder())
+            foreach (StatisticsReport report in Filter.FilteredData)
             {
                 foreach (ToolUsageData tool in report.ToolsUsed)
                 {
